@@ -1,5 +1,7 @@
 # AI Animation
 
+TODO: 后续尝试用这里的东西来做视频动画效果
+
 > 使用 AI 生成 HTML 演示动画的 Prompt 模板集合
 
 [English](README.md) · [Prompts](prompt.md)
@@ -7,6 +9,7 @@
 ---
 
 ## 项目简介
+
 <img width="2560" height="1440" alt="QQ_1775901765825" src="https://github.com/user-attachments/assets/77ee698e-7e88-43b7-b048-8eed006ed278" />
 <img width="2560" height="1440" alt="QQ_1775901779039" src="https://github.com/user-attachments/assets/e06a3dc6-a57f-40f6-b88b-d4da2c049f45" />
 <img width="2560" height="1440" alt="QQ_1775901789295" src="https://github.com/user-attachments/assets/657be29c-2770-46e2-8780-4d28712e3683" />
