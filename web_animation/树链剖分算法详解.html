@@ -1,0 +1,1576 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+  <title>树链剖分算法详解 | Heavy-Light Decomposition</title>
+
+  <script
+    crossorigin
+    src="https://unpkg.com/react@18/umd/react.production.min.js"
+  ></script>
+  <script
+    crossorigin
+    src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"
+  ></script>
+  <!-- Babel for JSX -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            dark: { 1: '#0F0E17', 2: '#1A1932' },
+            accent: { pink: '#FF6B35', peach: '#F4A261', purple: '#7F5AF0', teal: '#2EC4B6' }
+          },
+          animation: {
+            'float': 'float-particle linear infinite',
+            'pulse-glow': 'pulse-glow 2s ease-in-out infinite',
+            'ring-pulse': 'ring-pulse 3s ease-in-out infinite',
+            'dash-move': 'dash-move 1.5s linear infinite',
+            'border-rotate': 'border-rotate 4s linear infinite'
+          },
+          keyframes: {
+            'float-particle': {
+              '0%': { transform: 'translateY(100vh) scale(0)', opacity: '0' },
+              '10%,90%': { opacity: '1' },
+              '100%': { transform: 'translateY(-10vh) scale(1)', opacity: '0' }
+            },
+            'pulse-glow': {
+              '0%,100%': { transform: 'scale(1)', opacity: '1' },
+              '50%': { transform: 'scale(1.08)', opacity: '.85' }
+            },
+            'ring-pulse': {
+              '0%,100%': { boxShadow: '0 0 0 0 rgba(255,107,53,.2)' },
+              '50%': { boxShadow: '0 0 0 18px rgba(255,107,53,0)' }
+            },
+            'dash-move': { to: { strokeDashoffset: '-24' } },
+            'border-rotate': {
+              '0%': { background: 'linear-gradient(0deg,#FF6987,#FF8C42,#9B59B6,#2BA8A4)' },
+              '25%': { background: 'linear-gradient(90deg,#FF6987,#FF8C42,#9B59B6,#2BA8A4)' },
+              '50%': { background: 'linear-gradient(180deg,#FF6987,#FF8C42,#9B59B6,#2BA8A4)' },
+              '75%': { background: 'linear-gradient(270deg,#FF6987,#FF8C42,#9B59B6,#2BA8A4)' },
+              '100%': { background: 'linear-gradient(360deg,#FF6987,#FF8C42,#9B59B6,#2BA8A4)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    body {
+      font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+      background: #0F0E17;
+      color: #FFFFFE;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh
+    }
+
+    :root {
+      --accent: #FF6B35;
+      --accent2: #F4A261;
+      --accent-glow: rgba(255, 107, 53, 0.3);
+      --dark: #0F0E17;
+      --dark2: #1A1932;
+      --gray: #A7A9BE;
+    }
+
+    .lc {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      vertical-align: middle
+    }
+
+    .lc-96 svg {
+      width: 96px;
+      height: 96px
+    }
+
+    .lc-80 svg {
+      width: 80px;
+      height: 80px
+    }
+
+    .lc-64 svg {
+      width: 64px;
+      height: 64px
+    }
+
+    .lc-48 svg {
+      width: 48px;
+      height: 48px
+    }
+
+    .lc-40 svg {
+      width: 40px;
+      height: 40px
+    }
+
+    .lc-36 svg {
+      width: 36px;
+      height: 36px
+    }
+
+    .lc-32 svg {
+      width: 32px;
+      height: 32px
+    }
+
+    .lc-28 svg {
+      width: 28px;
+      height: 28px
+    }
+
+    .lc-24 svg {
+      width: 24px;
+      height: 24px
+    }
+
+    .lc-20 svg {
+      width: 20px;
+      height: 20px
+    }
+
+    .lc-16 svg {
+      width: 16px;
+      height: 16px
+    }
+
+    /* Slides */
+    .slide-container {
+      width: 100vw;
+      height: 100vh;
+      position: relative
+    }
+
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .6s ease
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      z-index: 10
+    }
+
+    .slide .anim {
+      opacity: 0;
+      transform: translateY(45px);
+      transition: none
+    }
+
+    .slide.active .anim.show {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity .7s cubic-bezier(.25, .46, .45, .94), transform .7s cubic-bezier(.25, .46, .45, .94)
+    }
+
+    /* Deco */
+    .deco {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none
+    }
+
+    .deco-pink {
+      background: radial-gradient(circle, rgba(255, 107, 53, .15), transparent)
+    }
+
+    .deco-peach {
+      background: radial-gradient(circle, rgba(244, 162, 97, .12), transparent)
+    }
+
+    .deco-lav {
+      background: radial-gradient(circle, rgba(127, 90, 240, .1), transparent)
+    }
+
+    /* Floating particles */
+    .particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden
+    }
+
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      animation: float linear infinite;
+      opacity: 0
+    }
+
+    /* Animated grid bg */
+    .grid-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      background-image: radial-gradient(circle, rgba(255, 107, 53, .06) 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: .6
+    }
+
+    /* Typography */
+    .t-hero {
+      font-size: 5rem;
+      font-weight: 900;
+      line-height: 1.15;
+      text-align: center
+    }
+
+    .t-huge {
+      font-size: 4rem;
+      font-weight: 900;
+      line-height: 1.2;
+      text-align: center
+    }
+
+    .t-big {
+      font-size: 3rem;
+      font-weight: 800;
+      line-height: 1.3;
+      text-align: center
+    }
+
+    .t-mid {
+      font-size: 2.2rem;
+      font-weight: 700;
+      line-height: 1.4;
+      text-align: center
+    }
+
+    .t-body {
+      font-size: 1.7rem;
+      font-weight: 400;
+      line-height: 1.6;
+      text-align: center
+    }
+
+    .t-sm {
+      font-size: 1.25rem;
+      font-weight: 400;
+      line-height: 1.5;
+      text-align: center
+    }
+
+    .t-code {
+      font-family: 'Fira Code', 'Consolas', monospace;
+      font-size: 1.1rem
+    }
+
+    /* Colors */
+    .c-pink {
+      color: #FF6B35
+    }
+
+    .c-rose {
+      color: #E71D36
+    }
+
+    .c-coral {
+      color: #FF6B6B
+    }
+
+    .c-orange {
+      color: #F4A261
+    }
+
+    .c-purple {
+      color: #7F5AF0
+    }
+
+    .c-teal {
+      color: #2EC4B6
+    }
+
+    .c-blue {
+      color: #4A90D9
+    }
+
+    .c-dark {
+      color: #FFFFFE
+    }
+
+    .c-gray {
+      color: #A7A9BE
+    }
+
+    .c-white {
+      color: #fff
+    }
+
+    /* BG highlight */
+    .bg-pink {
+      background: rgba(255, 107, 53, .15);
+      padding: 5px 18px;
+      border-radius: 10px
+    }
+
+    .bg-rose {
+      background: rgba(231, 29, 54, .15);
+      padding: 5px 18px;
+      border-radius: 10px
+    }
+
+    .bg-coral {
+      background: rgba(255, 107, 107, .15);
+      padding: 5px 18px;
+      border-radius: 10px
+    }
+
+    .bg-peach {
+      background: rgba(244, 162, 97, .15);
+      padding: 5px 18px;
+      border-radius: 10px
+    }
+
+    .bg-teal {
+      background: rgba(46, 196, 182, .15);
+      padding: 5px 18px;
+      border-radius: 10px
+    }
+
+    .bg-purple {
+      background: rgba(127, 90, 240, .15);
+      padding: 5px 18px;
+      border-radius: 10px
+    }
+
+    .ul-pink {
+      text-decoration: underline;
+      text-decoration-color: #FF6B35;
+      text-decoration-thickness: 4px;
+      text-underline-offset: 8px
+    }
+
+    .ul-teal {
+      text-decoration: underline;
+      text-decoration-color: #2EC4B6;
+      text-decoration-thickness: 4px;
+      text-underline-offset: 8px
+    }
+
+    .bold {
+      font-weight: 900
+    }
+
+    .italic {
+      font-style: italic
+    }
+
+    .line {
+      width: 70px;
+      height: 4px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, #FF6B35, #F4A261);
+      margin: 18px auto
+    }
+
+    /* Layouts */
+    .two-col {
+      display: flex;
+      gap: 32px;
+      width: 92%;
+      max-width: 1200px;
+      align-items: stretch
+    }
+
+    .col-card {
+      flex: 1;
+      background: transparent;
+      border-radius: 0 20px 20px 0;
+      padding: 32px 28px;
+      border: none;
+      box-shadow: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+      overflow: hidden
+    }
+
+    /* Flow */
+    .flow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 10px 0;
+      flex-wrap: wrap;
+      justify-content: center
+    }
+
+    .flow-step {
+      background: rgba(255, 107, 53, .15);
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 1.25rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      position: relative;
+      transition: transform .3s
+    }
+
+    .flow-step:hover {
+      transform: scale(1.05)
+    }
+
+    .flow-arrow {
+      color: #FF6B35
+    }
+
+    /* VS */
+    .vs-wrap {
+      display: flex;
+      gap: 36px;
+      align-items: center;
+      justify-content: center;
+      width: 88%;
+      max-width: 1000px
+    }
+
+    .vs-box {
+      flex: 1;
+      padding: 32px 24px;
+      border-radius: 18px;
+      text-align: center;
+      position: relative;
+      overflow: hidden
+    }
+
+    .vs-mid {
+      font-size: 3rem;
+      font-weight: 900;
+      color: #FF6B35
+    }
+
+    /* Concept */
+    .concept-word {
+      font-size: 6rem;
+      font-weight: 900;
+      letter-spacing: 8px;
+      background: linear-gradient(135deg, #FF6B35, #F4A261, #7F5AF0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text
+    }
+
+    .final-word {
+      font-size: 4.5rem;
+      font-weight: 900;
+      letter-spacing: 6px;
+      background: linear-gradient(135deg, #E71D36, #FF6B35, #F4A261);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text
+    }
+
+    .glow-text {
+      font-size: 2.6rem;
+      font-weight: 800;
+      color: #FF6B35;
+      text-shadow: 0 0 40px rgba(255, 107, 53, .4);
+      letter-spacing: 10px
+    }
+
+    /* Shapes */
+    .shape-grid {
+      display: flex;
+      gap: 20px;
+      margin: 14px 0;
+      justify-content: center
+    }
+
+    .shape-circle {
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 4px;
+      font-weight: 900;
+      color: #fff;
+      transition: transform .3s;
+      cursor: default
+    }
+
+    .shape-circle:hover {
+      transform: scale(1.1)
+    }
+
+    .sh-sm {
+      width: 90px;
+      height: 90px;
+      font-size: 1.7rem
+    }
+
+    .sh-lg {
+      width: 150px;
+      height: 150px;
+      font-size: 1.9rem
+    }
+
+    .sp {
+      background: linear-gradient(135deg, #FF6B35, #E76F51)
+    }
+
+    .so {
+      background: linear-gradient(135deg, #F4A261, #E9C46A)
+    }
+
+    .sv {
+      background: linear-gradient(135deg, #7F5AF0, #9B5DE5)
+    }
+
+    .st {
+      background: linear-gradient(135deg, #2EC4B6, #06D6A0)
+    }
+
+    /* Mini grid */
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      width: 88%;
+      max-width: 1060px
+    }
+
+    .mini-card {
+      background: rgba(26, 25, 50, .5);
+      border-radius: 14px;
+      padding: 22px 14px;
+      text-align: center;
+      border: 2px solid rgba(255, 107, 53, .15);
+      box-shadow: 0 4px 16px rgba(255, 107, 53, .08);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+      overflow: hidden;
+      transition: transform .3s, box-shadow .3s
+    }
+
+    .mini-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 32px rgba(255, 107, 53, .2)
+    }
+
+    /* Icon badge */
+    .icon-badge {
+      width: 68px;
+      height: 68px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 4px
+    }
+
+    .ib-rose {
+      background: linear-gradient(135deg, rgba(231, 29, 54, .2), rgba(231, 29, 54, .1))
+    }
+
+    .ib-purple {
+      background: linear-gradient(135deg, rgba(127, 90, 240, .2), rgba(127, 90, 240, .1))
+    }
+
+    .ib-teal {
+      background: linear-gradient(135deg, rgba(46, 196, 182, .2), rgba(46, 196, 182, .1))
+    }
+
+    .ib-orange {
+      background: linear-gradient(135deg, rgba(244, 162, 97, .2), rgba(244, 162, 97, .1))
+    }
+
+    .icon-row {
+      display: flex;
+      gap: 22px;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap
+    }
+
+    /* Progress bar */
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 107, 53, .15);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 6px
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 1.5s ease
+    }
+
+    .pf-rose {
+      background: linear-gradient(90deg, #FF6B35, #E71D36)
+    }
+
+    .pf-purple {
+      background: linear-gradient(90deg, #9B5DE5, #7F5AF0)
+    }
+
+    .pf-teal {
+      background: linear-gradient(90deg, #06D6A0, #2EC4B6)
+    }
+
+    .pf-orange {
+      background: linear-gradient(90deg, #E9C46A, #F4A261)
+    }
+
+    /* VS detail items */
+    .vs-detail {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 12px;
+      width: 100%
+    }
+
+    .vs-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 6px 10px;
+      border-radius: 8px
+    }
+
+    .vs-item-bad {
+      background: rgba(231, 29, 54, .1);
+      color: #E71D36
+    }
+
+    .vs-item-good {
+      background: rgba(46, 196, 182, .1);
+      color: #2EC4B6
+    }
+
+    /* Slide indicator */
+    .slide-indicator {
+      position: fixed;
+      bottom: 20px;
+      right: 30px;
+      z-index: 100;
+      display: flex;
+      gap: 8px;
+      align-items: center
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 107, 53, .25);
+      transition: all .3s
+    }
+
+    .dot.active {
+      background: #FF6B35;
+      width: 28px;
+      border-radius: 5px
+    }
+
+    .page-badge {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 1rem;
+      color: rgba(255, 107, 53, .4);
+      font-weight: 700;
+      letter-spacing: 2px
+    }
+
+    .bg-1 {
+      background: radial-gradient(ellipse at 50% 30%, #1A1932 0%, #0F0E17 100%)
+    }
+
+    .bg-2 {
+      background: radial-gradient(ellipse at 30% 20%, #1A1932 0%, #0F0E17 100%)
+    }
+
+    .bg-3 {
+      background: radial-gradient(ellipse at 70% 80%, #1A1932 0%, #0F0E17 100%)
+    }
+
+    .bg-4 {
+      background: radial-gradient(ellipse at 50% 50%, #1A1932 0%, #0F0E17 100%)
+    }
+
+    .bg-5 {
+      background: radial-gradient(ellipse at 50% 70%, #1A1932 0%, #0F0E17 100%)
+    }
+
+    /* Code block */
+    .code-block {
+      background: rgba(26, 25, 50, .8);
+      border-radius: 12px;
+      padding: 20px;
+      font-family: 'Fira Code', 'Consolas', monospace;
+      font-size: .95rem;
+      overflow-x: auto;
+      border: 1px solid rgba(255, 107, 53, .2)
+    }
+
+    .code-keyword {
+      color: #7F5AF0;
+      font-weight: 600
+    }
+
+    .code-func {
+      color: #2EC4B6
+    }
+
+    .code-var {
+      color: #F4A261
+    }
+
+    .code-comment {
+      color: #A7A9BE;
+      font-style: italic
+    }
+
+    .code-num {
+      color: #FF6B35
+    }
+
+    /* Tree diagram */
+    .tree-node {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+      position: relative;
+      z-index: 2
+    }
+
+    .tree-node.heavy {
+      background: linear-gradient(135deg, #FF6B35, #E76F51);
+      box-shadow: 0 4px 12px rgba(255, 107, 53, .4)
+    }
+
+    .tree-node.light {
+      background: rgba(127, 90, 240, .2);
+      border: 2px solid #7F5AF0
+    }
+
+    .tree-edge {
+      stroke: #A7A9BE;
+      stroke-width: 2;
+      stroke-dasharray: 4 2
+    }
+
+    .tree-edge.heavy {
+      stroke: #FF6B35;
+      stroke-width: 3;
+      stroke-dasharray: none
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: .95rem;
+      font-weight: 700
+    }
+
+    .tag-rose {
+      background: rgba(231, 29, 54, .15);
+      color: #E71D36
+    }
+
+    .tag-teal {
+      background: rgba(46, 196, 182, .15);
+      color: #2EC4B6
+    }
+
+    .tag-purple {
+      background: rgba(127, 90, 240, .15);
+      color: #7F5AF0
+    }
+
+    .tag-orange {
+      background: rgba(244, 162, 97, .15);
+      color: #F4A261
+    }
+
+    .tag-blue {
+      background: rgba(74, 144, 217, .15);
+      color: #4A90D9
+    }
+
+    .tag-pink {
+      background: rgba(255, 107, 53, .15);
+      /* color: #FF6B35 */
+      color: oklch(59.2% 0.249 0.584)
+    }
+
+    /* Shine effect */
+    .shine {
+      position: relative;
+      overflow: hidden
+    }
+
+    .shine::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255, 255, 255, .1), transparent);
+      transform: rotate(45deg);
+      transition: opacity .3s;
+      opacity: 0
+    }
+
+    .shine:hover::after {
+      opacity: 1;
+      animation: shine-move .8s ease-out
+    }
+
+    @keyframes shine-move {
+      0% {
+        transform: translateX(-100%) rotate(45deg)
+      }
+
+      100% {
+        transform: translateX(100%) rotate(45deg)
+      }
+    }
+
+    /* Complexity table */
+    .comp-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0
+    }
+
+    .comp-table th {
+      padding: 12px 16px;
+      text-align: left;
+      font-weight: 700;
+      color: #FF6B35;
+      border-bottom: 2px solid rgba(255, 107, 53, .3)
+    }
+
+    .comp-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(167, 169, 190, .1)
+    }
+
+    .comp-table tr:hover {
+      background: rgba(255, 107, 53, .05)
+    }
+
+    .glow-ring {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      border: 4px solid rgba(255, 107, 53, .25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      animation: ring-pulse 3s ease-in-out infinite
+    }
+
+    @keyframes ring-pulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(255, 107, 53, .2)
+      }
+
+      50% {
+        box-shadow: 0 0 0 18px rgba(255, 107, 53, 0)
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    // ========== Slide Components ==========
+
+    const Slide = ({ id, bgClass, children, isActive }) => (
+      <div className={`slide ${bgClass} ${isActive ? 'active' : ''}`} id={id}>
+        <div className="grid-bg"></div>
+        <div className="particles" id={`particles-${id}`}></div>
+        {children}
+      </div>
+    );
+
+    const Anim = ({ children, delay = 0, className = "", ...rest }) => {
+      const ref = useRef(null);
+      useEffect(() => {
+        if (ref.current) {
+          setTimeout(() => ref.current?.classList.add('show'), delay);
+        }
+      }, [delay]);
+      return <div ref={ref} className={`anim ${className}`} {...rest}>{children}</div>;
+    };
+
+    const Particles = ({ containerId }) => {
+      useEffect(() => {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        const colors = ['rgba(255,107,53,.35)', 'rgba(244,162,97,.3)', 'rgba(127,90,240,.25)', 'rgba(46,196,182,.25)'];
+        for (let i = 0; i < 12; i++) {
+          const p = document.createElement('div');
+          p.className = 'particle';
+          const size = Math.random() * 8 + 4;
+          p.style.cssText = `
+            width:${size}px;height:${size}px;
+            left:${Math.random() * 100}%;
+            background:${colors[Math.floor(Math.random() * colors.length)]};
+            animation-duration:${Math.random() * 6 + 6}s;
+            animation-delay:${Math.random() * 6}s;
+          `;
+          container.appendChild(p);
+        }
+      }, []);
+      return null;
+    };
+
+    // ========== Main App ==========
+
+    const App = () => {
+      const [currentSlide, setCurrentSlide] = useState(0);
+      const totalSlides = 9;
+
+      const goToSlide = (n) => {
+        if (n < 0 || n >= totalSlides) return;
+        setCurrentSlide(n);
+        setTimeout(() => lucide.createIcons(), 100);
+      };
+
+      useEffect(() => {
+        lucide.createIcons();
+
+        const handleKey = (e) => {
+          if (['ArrowRight', 'ArrowDown', ' ', 'PageDown'].includes(e.key)) {
+            e.preventDefault(); goToSlide(currentSlide + 1);
+          } else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) {
+            e.preventDefault(); goToSlide(currentSlide - 1);
+          } else if (e.key === 'Home') {
+            e.preventDefault(); goToSlide(0);
+          } else if (e.key === 'End') {
+            e.preventDefault(); goToSlide(totalSlides - 1);
+          }
+        };
+
+        document.addEventListener('keydown', handleKey);
+        return () => document.removeEventListener('keydown', handleKey);
+      }, [currentSlide]);
+
+      return (
+        <div className="slide-container">
+
+          {/* ========== Slide 1: Title ========== */}
+          <Slide id="s0" bgClass="bg-1" isActive={currentSlide === 0}>
+            <div className="deco deco-pink" style={{ width: '500px', height: '500px', top: '-200px', right: '-180px' }}></div>
+            <div className="deco deco-peach" style={{ width: '350px', height: '350px', bottom: '-100px', left: '-100px' }}></div>
+            <Particles containerId="particles-s0" />
+
+            <Anim delay={200}>
+              <svg width="180" height="100" viewBox="0 0 180 100">
+                <defs>
+                  <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style={{ stopColor: '#FF6987' }} />
+                    <stop offset="100%" style={{ stopColor: '#FF8C42' }} />
+                  </linearGradient>
+                </defs>
+                {/* Tree icon */}
+                <circle cx="90" cy="25" r="12" fill="url(#g1)" opacity=".2" stroke="url(#g1)" strokeWidth="2" />
+                <line x1="90" y1="37" x2="60" y2="60" stroke="#FF6B35" strokeWidth="2.5" />
+                <line x1="90" y1="37" x2="90" y2="65" stroke="#FF6B35" strokeWidth="2.5" />
+                <line x1="90" y1="37" x2="120" y2="60" stroke="#FF6B35" strokeWidth="2.5" />
+                <circle cx="60" cy="70" r="10" fill="rgba(255,107,53,.15)" stroke="#FF6B35" strokeWidth="2" />
+                <circle cx="90" cy="78" r="10" fill="rgba(255,107,53,.15)" stroke="#FF6B35" strokeWidth="2" />
+                <circle cx="120" cy="70" r="10" fill="rgba(255,107,53,.15)" stroke="#FF6B35" strokeWidth="2" />
+                <text x="90" y="30" textAnchor="middle" fill="#fff" fontSize="14" fontWeight="700">1</text>
+              </svg>
+            </Anim>
+            <Anim delay={400} className="t-huge c-dark">树链剖分算法</Anim>
+            <Anim delay={600} className="t-big c-pink" style={{ marginTop: '10px' }}>Heavy-Light Decomposition</Anim>
+            <Anim delay={800} className="line"></Anim>
+            <Anim delay={1000} className="mini-grid">
+              {[
+                { icon: 'git-branch', title: '路径查询', desc: 'O(log²n)', tag: '核心应用', color: 'pink' },
+                { icon: 'zap', title: '高效更新', desc: '区间修改', tag: '线段树结合', color: 'teal' },
+                { icon: 'layers', title: '两次DFS', desc: '预处理O(n)', tag: '经典技巧', color: 'purple' },
+                { icon: 'target', title: 'LCA优化', desc: '倍增替代', tag: '竞赛必备', color: 'orange' }
+              ].map((item, i) => (
+                <div key={i} className="mini-card shine">
+                  <div className="icon-badge ib-rose">
+                    <span className={`lc lc-36 c-${item.color}`}><i data-lucide={item.icon}></i></span>
+                  </div>
+                  <div style={{ fontSize: '1.15rem', fontWeight: 700 }}>{item.title}<br /><span className={`c-${item.color}`}>{item.desc}</span></div>
+                  <div className="progress-bar"><div className={`progress-fill pf-${item.color === 'pink' ? 'rose' : item.color === 'teal' ? 'teal' : item.color === 'purple' ? 'purple' : 'orange'}`} style={{ width: '100%' }}></div></div>
+                  <div className={`tag tag-${item.color}`}>{item.tag}</div>
+                </div>
+              ))}
+            </Anim>
+            <div className="page-badge">1 / {totalSlides}</div>
+          </Slide>
+
+          {/* ========== Slide 2: 问题引入 ========== */}
+          <Slide id="s1" bgClass="bg-2" isActive={currentSlide === 1}>
+            <div className="deco deco-pink" style={{ width: '400px', height: '400px', top: '-130px', left: '-130px' }}></div>
+
+            <Anim delay={200} className="t-mid c-gray" style={{ marginBottom: '18px' }}>树上路径查询的痛点 (；¬д¬)</Anim>
+            <Anim delay={400} className="two-col">
+              <div className="col-card shine" style={{ borderLeft: '6px solid #E8395B' }}>
+                <div style={{ position: 'relative', width: '100%', display: 'flex', justifyContent: 'center' }}>
+                  <svg width="280" height="100" viewBox="0 0 280 100">
+                    {/* Naive approach: O(n) per query */}
+                    <rect x="10" y="15" width="100" height="70" rx="8" fill="rgba(232,57,91,.08)" stroke="#E8395B" strokeWidth="2" />
+                    <text x="60" y="38" textAnchor="middle" fill="#E8395B" fontSize="14" fontWeight="700">朴素做法</text>
+                    <text x="60" y="55" textAnchor="middle" fill="#A7A9BE" fontSize="13">每次查询</text>
+                    <text x="60" y="73" textAnchor="middle" fill="#FF6B35" fontSize="13" fontWeight="900">O(n)</text>
+
+                    <line x1="110" y1="50" x2="140" y2="50" stroke="#ccc" strokeWidth="2" strokeDasharray="4 3" />
+                    <polygon points="140,46 150,50 140,54" fill="#ccc" />
+
+                    <rect x="150" y="15" width="100" height="70" rx="8" fill="rgba(255,107,53,.1)" stroke="#FF6B35" strokeWidth="2" />
+                    <text x="200" y="38" textAnchor="middle" fill="#FF6B35" fontSize="14" fontWeight="700">10⁵ 次查询</text>
+                    <text x="200" y="55" textAnchor="middle" fill="#A7A9BE" fontSize="13">TLE! 💥</text>
+                    <text x="200" y="73" textAnchor="middle" fill="#E71D36" fontSize="13" fontWeight="900">超时</text>
+                  </svg>
+                </div>
+                <div className="t-mid c-dark"><span className="c-rose bold ul-pink">暴力遍历</span></div>
+                <div className="flow">
+                  <div className="flow-step"><span className="lc lc-24 c-blue"><i data-lucide="route"></i></span>任意路径</div>
+                  <span className="lc lc-24 flow-arrow"><i data-lucide="arrow-right"></i></span>
+                  <div className="flow-step" style={{ background: 'rgba(255,107,107,.1)' }}><span className="lc lc-24 c-coral"><i data-lucide="clock"></i></span><span className="c-coral">O(n) 单次</span></div>
+                  <span className="lc lc-24 flow-arrow"><i data-lucide="arrow-right"></i></span>
+                  <div className="flow-step" style={{ background: 'rgba(232,57,91,.1)' }}><span className="lc lc-24 c-rose"><i data-lucide="alert-octagon"></i></span><span className="c-rose bold">超时</span></div>
+                </div>
+                <div className="t-sm c-gray italic">数据规模大时直接寄 (´；д；`)</div>
+              </div>
+
+              <div className="col-card shine" style={{ borderLeft: '6px solid #2BA8A4' }}>
+                <div style={{ position: 'relative', width: '100%', display: 'flex', justifyContent: 'center' }}>
+                  <svg width="280" height="100" viewBox="0 0 280 100">
+                    {/* HLD approach: O(log²n) */}
+                    <rect x="10" y="15" width="100" height="70" rx="8" fill="rgba(46,196,182,.08)" stroke="#2EC4B6" strokeWidth="2" />
+                    <text x="60" y="38" textAnchor="middle" fill="#2EC4B6" fontSize="14" fontWeight="700">树链剖分</text>
+                    <text x="60" y="55" textAnchor="middle" fill="#A7A9BE" fontSize="13">路径拆分</text>
+                    <text x="60" y="73" textAnchor="middle" fill="#2EC4B6" fontSize="13" fontWeight="900">O(log²n)</text>
+
+                    <line x1="110" y1="50" x2="140" y2="50" stroke="#2EC4B6" strokeWidth="2" strokeDasharray="4 3" />
+                    <polygon points="140,46 150,50 140,54" fill="#2EC4B6" />
+
+                    <rect x="150" y="15" width="100" height="70" rx="8" fill="rgba(46,196,182,.15)" stroke="#2EC4B6" strokeWidth="2" />
+                    <text x="200" y="38" textAnchor="middle" fill="#2EC4B6" fontSize="14" fontWeight="700">10⁵ 次查询</text>
+                    <text x="200" y="55" textAnchor="middle" fill="#A7A9BE" fontSize="13">≈ 10⁵ × 400</text>
+                    <text x="200" y="73" textAnchor="middle" fill="#2EC4B6" fontSize="13" fontWeight="900">✓ AC! ✨</text>
+                  </svg>
+                </div>
+                <div className="t-mid c-dark"><span className="c-teal italic">链上转化</span></div>
+                <div className="flow">
+                  <div className="flow-step" style={{ background: 'rgba(46,196,182,.06)' }}><span className="lc lc-24 c-teal"><i data-lucide="split"></i></span>拆成重链</div>
+                  <span className="lc lc-24 flow-arrow"><i data-lucide="arrow-right"></i></span>
+                  <div className="flow-step" style={{ background: 'rgba(46,196,182,.1)' }}><span className="lc lc-24 c-teal"><i data-lucide="list-ordered"></i></span><span className="c-teal">连续区间</span></div>
+                  <span className="lc lc-24 flow-arrow"><i data-lucide="arrow-right"></i></span>
+                  <div className="flow-step" style={{ background: 'rgba(46,196,182,.15)' }}><span className="lc lc-24 c-teal"><i data-lucide="circle-check"></i></span><span className="c-teal bold">线段树维护</span></div>
+                </div>
+                <div className="t-sm c-gray italic">把树问题转为序列问题 (✧ω✧)</div>
+              </div>
+            </Anim>
+            <div className="page-badge">2 / {totalSlides}</div>
+          </Slide>
+
+          {/* ========== Slide 3: 核心概念 ========== */}
+          <Slide id="s2" bgClass="bg-3" isActive={currentSlide === 2}>
+            <div className="deco deco-lav" style={{ width: '450px', height: '450px', bottom: '-150px', right: '-150px' }}></div>
+
+            <Anim delay={200} className="t-mid c-gray" style={{ marginBottom: '18px' }}>核心概念：重儿子 & 重链 (｀・ω・´)</Anim>
+            <Anim delay={400} className="two-col">
+              <div className="col-card shine" style={{ borderLeft: '6px solid #7F5AF0' }}>
+                <div style={{ position: 'relative', width: '100%', display: 'flex', justifyContent: 'center' }}>
+                  <svg width="260" height="220" viewBox="0 0 260 220">
+                    {[
+                      { x: 130, y: 20, id: 1, heavy: true },
+                      { x: 50, y: 80, id: 2, heavy: false },
+                      { x: 130, y: 80, id: 3, heavy: true },
+                      { x: 210, y: 80, id: 4, heavy: false },
+                      { x: 30, y: 140, id: 5, heavy: false },
+                      { x: 70, y: 140, id: 6, heavy: true },
+                      { x: 130, y: 140, id: 7, heavy: false },
+                      { x: 210, y: 140, id: 9, heavy: false },
+                      { x: 170, y: 200, id: 8, heavy: true }
+                    ].map(node => (
+                      <g key={node.id}>
+                        <circle cx={node.x} cy={node.y} r="18"
+                          fill={node.heavy ? 'url(#heavyGrad)' : 'rgba(127,90,240,.15)'}
+                          stroke={node.heavy ? '#FF6B35' : '#7F5AF0'}
+                          strokeWidth={node.heavy ? 3 : 2} />
+                        <text x={node.x} y={node.y + 5} textAnchor="middle" fill="#fff" fontSize="12" fontWeight="700">{node.id}</text>
+                      </g>
+                    ))}
+                    {/* Edges */}
+                    <defs>
+                      <linearGradient id="heavyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style={{ stopColor: '#FF6B35' }} />
+                        <stop offset="100%" style={{ stopColor: '#E76F51' }} />
+                      </linearGradient>
+                    </defs>
+                    {/* Heavy edges (thick orange) */}
+                    <line x1="130" y1="38" x2="130" y2="62" stroke="#FF6B35" strokeWidth="4" />
+                    <line x1="130" y1="98" x2="70" y2="122" stroke="#FF6B35" strokeWidth="4" />
+                    <line x1="70" y1="158" x2="170" y2="182" stroke="#FF6B35" strokeWidth="4" strokeDasharray="8 2" />
+                    {/* Light edges (dashed gray) */}
+                    <line x1="130" y1="38" x2="50" y2="62" stroke="#A7A9BE" strokeWidth="2" strokeDasharray="4 2" />
+                    <line x1="130" y1="38" x2="210" y2="62" stroke="#A7A9BE" strokeWidth="2" strokeDasharray="4 2" />
+                    <line x1="50" y1="98" x2="30" y2="122" stroke="#A7A9BE" strokeWidth="2" strokeDasharray="4 2" />
+                    <line x1="130" y1="98" x2="130" y2="122" stroke="#A7A9BE" strokeWidth="2" strokeDasharray="4 2" />
+                    <line x1="130" y1="98" x2="210" y2="122" stroke="#A7A9BE" strokeWidth="2" strokeDasharray="4 2" />
+                    {/* Labels */}
+                    <text x="160" y="30" fill="#FF6B35" fontSize="9" fontWeight="700">重边</text>
+                    <text x="220" y="50" fill="#A7A9BE" fontSize="9">轻边</text>
+                  </svg>
+                </div>
+                <div className="t-mid c-dark"><span className="c-purple bold">重儿子定义</span></div>
+                <div className="t-body c-gray" style={{ textAlign: 'left', padding: '0 10px' }}>
+                  • 子树大小最大的儿子为<span className="c-pink bold">重儿子</span><br />
+                  • 连接重儿子的边叫<span className="c-pink bold">重边</span><br />
+                  • 重边连成的极大链叫<span className="c-teal bold">重链</span>
+                </div>
+              </div>
+
+              <div className="col-card shine" style={{ borderLeft: '6px solid #2EC4B6' }}>
+                <div style={{ position: 'relative', width: '100%', display: 'flex', justifyContent: 'center' }}>
+                  <svg width="250" height="250" viewBox="0 0 250 250">
+                    {/* Heavy chain highlight */}
+                    <rect x="90" y="12" width="40" height="220" rx="8" fill="rgba(255,107,53,.1)" stroke="#FF6B35" strokeWidth="2" strokeDasharray="5 2" />
+                    <text x="110" y="10" textAnchor="middle" fill="#FF6B35" fontSize="11" fontWeight="700">一条重链</text>
+
+                    {/* Simplified chain */}
+                    {[
+                      { y: 30, id: 1 }, { y: 90, id: 3 }, { y: 150, id: 6 }, { y: 210, id: 8 }
+                    ].map((node, i) => (
+                      <g key={node.id}>
+                        <circle cx="110" cy={node.y} r="16" fill="url(#heavyGrad)" stroke="#FF6B35" strokeWidth="2" />
+                        <text x="110" y={node.y + 5} textAnchor="middle" fill="#fff" fontSize="11" fontWeight="700">{node.id}</text>
+                        {i < 3 && <line x1="110" y1={node.y + 16} x2="110" y2={node.y + 60 - 16} stroke="#FF6B35" strokeWidth="3" />}
+                      </g>
+                    ))}
+                    <defs>
+                      <linearGradient id="heavyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style={{ stopColor: '#FF6B35' }} />
+                        <stop offset="100%" style={{ stopColor: '#E76F51' }} />
+                      </linearGradient>
+                    </defs>
+
+                    {/* Side branches */}
+                    <circle cx="60" cy="90" r="16" fill="rgba(127,90,240,.15)" stroke="#7F5AF0" strokeWidth="2" />
+                    <text x="60" y="95" textAnchor="middle" fill="#fff" fontSize="10">2</text>
+                    <line x1="94" y1="90" x2="74" y2="90" stroke="#A7A9BE" strokeWidth="2" strokeDasharray="3 2" />
+
+                    <circle cx="160" cy="90" r="16" fill="rgba(127,90,240,.15)" stroke="#7F5AF0" strokeWidth="2" />
+                    <text x="160" y="95" textAnchor="middle" fill="#fff" fontSize="10">4</text>
+                    <line x1="126" y1="90" x2="146" y2="90" stroke="#A7A9BE" strokeWidth="2" strokeDasharray="3 2" />
+                  </svg>
+                </div>
+                <div className="t-mid c-dark"><span className="c-teal bold">关键性质</span></div>
+                <div className="t-body c-gray" style={{ textAlign: 'left', padding: '0 10px' }}>
+                  • 任意节点到根，轻边 ≤ <span className="c-pink bold">log n</span> 条<br />
+                  • 每条重链在DFS序中是<span className="c-teal bold">连续区间</span><br />
+                  • 路径查询 → 拆成 <span className="c-purple bold">O(log n)</span> 个区间
+                </div>
+              </div>
+            </Anim>
+            <div className="page-badge">3 / {totalSlides}</div>
+          </Slide>
+
+          {/* ========== Slide 4: 两次DFS ========== */}
+          <Slide id="s3" bgClass="bg-4" isActive={currentSlide === 3}>
+            <div className="grid-bg"></div>
+            <div className="deco deco-peach" style={{ width: '500px', height: '500px', top: '-220px', left: '50%', marginLeft: '-250px' }}></div>
+
+            <Anim delay={200} className="t-mid c-gray">预处理：两次 DFS 遍历 (｡･ω･｡)</Anim>
+            <Anim delay={400} className="two-col">
+              <div className="col-card shine" style={{ borderLeft: '6px solid #FF6B35', flex: '1.1' }}>
+                <div className="t-mid c-dark" style={{ marginBottom: '10px' }}><span className="lc lc-28 c-pink"><i data-lucide="arrow-down"></i></span> DFS₁：计算子树信息</div>
+                <div className="code-block" style={{ width: '100%', maxWidth: '500px' }}>
+                  <div><span className="code-keyword">void</span> <span className="code-func">dfs1</span>(<span className="code-var">u</span>, <span className="code-var">fa</span>) {'{'}</div>
+                  <div style={{ paddingLeft: '20px' }}><span className="code-var">sz</span>[u] = <span className="code-num">1</span>; <span className="code-comment">// 子树大小</span></div>
+                  <div style={{ paddingLeft: '20px' }}><span className="code-keyword">for</span> (<span className="code-var">v</span> : <span className="code-var">adj</span>[u]) {'{'}</div>
+                  <div style={{ paddingLeft: '40px' }}><span className="code-keyword">if</span> (<span className="code-var">v</span> == <span className="code-var">fa</span>) <span className="code-keyword">continue</span>;</div>
+                  <div style={{ paddingLeft: '40px' }}><span className="code-var">dep</span>[v] = <span className="code-var">dep</span>[u] + <span className="code-num">1</span>;</div>
+                  <div style={{ paddingLeft: '40px' }}><span className="code-func">dfs1</span>(<span className="code-var">v</span>, <span className="code-var">u</span>);</div>
+                  <div style={{ paddingLeft: '40px' }}><span className="code-var">sz</span>[u] += <span className="code-var">sz</span>[v];</div>
+                  <div style={{ paddingLeft: '40px' }}><span className="code-comment">// 更新重儿子</span></div>
+                  <div style={{ paddingLeft: '40px' }}><span className="code-keyword">if</span> (<span className="code-var">sz</span>[v] {'>'} <span className="code-var">sz</span>[<span className="code-var">son</span>[u]])</div>
+                  <div style={{ paddingLeft: '60px' }}><span className="code-var">son</span>[u] = <span className="code-var">v</span>;</div>
+                  <div style={{ paddingLeft: '20px' }}>{'}'}</div>
+                  <div>{'}'}</div>
+                </div>
+                <div className="flow" style={{ marginTop: '10px' }}>
+                  <span className="tag tag-purple"><span className="lc lc-20"><i data-lucide="database"></i></span>sz[u]: 子树大小</span>
+                  <span className="tag tag-orange"><span className="lc lc-20"><i data-lucide="user-check"></i></span>son[u]: 重儿子</span>
+                </div>
+              </div>
+
+              <div className="col-card shine" style={{ borderLeft: '6px solid #2EC4B6', flex: '1.1' }}>
+                <div className="t-mid c-dark" style={{ marginBottom: '10px' }}><span className="lc lc-28 c-teal"><i data-lucide="arrow-down"></i></span> DFS₂：剖分重链</div>
+                <div className="code-block" style={{ width: '100%', maxWidth: '500px' }}>
+                  <div><span className="code-keyword">void</span> <span className="code-func">dfs2</span>(<span className="code-var">u</span>, <span className="code-var">top</span>) {'{'}</div>
+                  <div style={{ paddingLeft: '20px' }}><span className="code-var">top</span>[u] = <span className="code-var">top</span>; <span className="code-comment">// 链顶</span></div>
+                  <div style={{ paddingLeft: '20px' }}><span className="code-var">dfn</span>[u] = ++<span className="code-var">timer</span>; <span className="code-comment">// DFS序</span></div>
+                  <div style={{ paddingLeft: '20px' }}><span className="code-var">rnk</span>[<span className="code-var">timer</span>] = <span className="code-var">u</span>; <span className="code-comment">// 逆映射</span></div>
+                  <div style={{ paddingLeft: '20px' }}><span className="code-comment">// 先走重儿子，保证重链连续</span></div>
+                  <div style={{ paddingLeft: '20px' }}><span className="code-keyword">if</span> (<span className="code-var">son</span>[u]) <span className="code-func">dfs2</span>(<span className="code-var">son</span>[u], <span className="code-var">top</span>);</div>
+                  <div style={{ paddingLeft: '20px' }}><span className="code-keyword">for</span> (<span className="code-var">v</span> : <span className="code-var">adj</span>[u]) {'{'}</div>
+                  <div style={{ paddingLeft: '40px' }}><span className="code-keyword">if</span> (<span className="code-var">v</span>==<span className="code-var">fa</span>[u] || <span className="code-var">v</span>==<span className="code-var">son</span>[u]) <span className="code-keyword">continue</span>;</div>
+                  <div style={{ paddingLeft: '40px' }}><span className="code-func">dfs2</span>(<span className="code-var">v</span>, <span className="code-var">v</span>); <span className="code-comment">// 轻边新链</span></div>
+                  <div style={{ paddingLeft: '20px' }}>{'}'}</div>
+                  <div>{'}'}</div>
+                </div>
+                <div className="flow" style={{ marginTop: '10px' }}>
+                  <span className="tag tag-teal"><span className="lc lc-20"><i data-lucide="hash"></i></span>dfn[u]: DFS序号</span>
+                  <span className="tag tag-blue"><span className="lc lc-20"><i data-lucide="anchor"></i></span>top[u]: 链顶节点</span>
+                </div>
+              </div>
+            </Anim>
+            <Anim delay={800} className="t-sm c-gray" style={{ marginTop: '14px' }}>
+              预处理时间复杂度：<span className="c-teal bold">O(n)</span> ｜ 空间复杂度：<span className="c-teal bold">O(n)</span>
+            </Anim>
+            <div className="page-badge">4 / {totalSlides}</div>
+          </Slide>
+
+          <Slide id="s4" bgClass="bg-5" isActive={currentSlide === 4}>
+            <div className="grid-bg"></div>
+            <div className="deco deco-lav" style={{ width: '600px', height: '600px', top: '50%', left: '50%', marginTop: '-300px', marginLeft: '-300px' }}></div>
+
+            <Anim delay={200} className="t-mid c-gray">路径查询：jump to top (｀・ω・´)b</Anim>
+            <Anim delay={400} style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+              <svg width="700" height="280" viewBox="0 0 700 280">
+                <defs>
+                  <marker id="arrow2" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                    <polygon points="0 0, 10 3.5, 0 7" fill="#FF6B35" />
+                  </marker>
+                  <marker id="arrowTeal" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                    <polygon points="0 0, 10 3.5, 0 7" fill="#2EC4B6" />
+                  </marker>
+                </defs>
+
+                {/* Node u (bottom left) */}
+                <circle cx="120" cy="240" r="24" fill="rgba(255,107,53,.2)" stroke="#FF6B35" strokeWidth="3" />
+                <text x="120" y="246" textAnchor="middle" fill="#fff" fontSize="16" fontWeight="700">u</text>
+
+                {/* Node v (bottom right) */}
+                <circle cx="580" cy="240" r="24" fill="rgba(46,196,182,.2)" stroke="#2EC4B6" strokeWidth="3" />
+                <text x="580" y="246" textAnchor="middle" fill="#fff" fontSize="16" fontWeight="700">v</text>
+
+                {/* LCA (top center) */}
+                <circle cx="350" cy="60" r="24" fill="rgba(255,107,53,.3)" stroke="#FF6B35" strokeWidth="3" />
+                <text x="350" y="66" textAnchor="middle" fill="#fff" fontSize="14" fontWeight="700">LCA</text>
+
+                {/* Vertical dashed rectangles showing chains */}
+                {/* Chain from u */}
+                <rect x="105" y="140" width="30" height="100" rx="6" fill="none" stroke="#FF6B35" strokeWidth="2" strokeDasharray="5 3" opacity="0.6" />
+                {/* Chain from v */}
+                <rect x="565" y="120" width="30" height="120" rx="6" fill="none" stroke="#2EC4B6" strokeWidth="2" strokeDasharray="5 3" opacity="0.6" />
+                {/* Chain at LCA */}
+                <rect x="335" y="40" width="30" height="100" rx="6" fill="none" stroke="#FF6B35" strokeWidth="2" strokeDasharray="5 3" opacity="0.6" />
+
+                {/* Jump arrows - curved paths */}
+                {/* jump(u) - curved arrow from u going up-left then to LCA */}
+                <path d="M120,216 Q120,180 150,160 Q180,140 250,110 Q300,90 330,75"
+                  fill="none" stroke="#FF6B35" strokeWidth="2.5" strokeDasharray="6 3" markerEnd="url(#arrow2)" />
+
+                {/* jump(v) - curved arrow from v going up-right then to LCA */}
+                <path d="M580,216 Q580,180 550,160 Q520,140 450,110 Q400,90 370,75"
+                  fill="none" stroke="#2EC4B6" strokeWidth="2.5" strokeDasharray="6 3" markerEnd="url(#arrowTeal)" />
+
+                {/* Labels */}
+                <text x="180" y="150" fill="#A7A9BE" fontSize="12">jump(u)</text>
+                <text x="480" y="150" fill="#A7A9BE" fontSize="12">jump(v)</text>
+                <text x="350" y="30" textAnchor="middle" fill="#FF6B35" fontSize="13" fontWeight="700">top[u] == top[v] ✓</text>
+              </svg>
+            </Anim>
+            <Anim delay={600} className="code-block" style={{ width: '90%', maxWidth: '600px', marginTop: '10px' }}>
+              <div><span className="code-keyword">int</span> <span className="code-func">queryPath</span>(<span className="code-var">u</span>, <span className="code-var">v</span>) {'{'}</div>
+              <div style={{ paddingLeft: '20px' }}><span className="code-var">int</span> <span className="code-var">res</span> = <span className="code-num">0</span>;</div>
+              <div style={{ paddingLeft: '20px' }}><span className="code-keyword">while</span> (<span className="code-var">top</span>[u] != <span className="code-var">top</span>[v]) {'{'}</div>
+              <div style={{ paddingLeft: '40px' }}><span className="code-comment">// 让深度大的链往上跳</span></div>
+              <div style={{ paddingLeft: '40px' }}><span className="code-keyword">if</span> (<span className="code-var">dep</span>[<span className="code-var">top</span>[u]] {'<'} <span className="code-var">dep</span>[<span className="code-var">top</span>[v]]) <span className="code-var">swap</span>(<span className="code-var">u</span>, <span className="code-var">v</span>);</div>
+              <div style={{ paddingLeft: '40px' }}><span className="code-comment">// 查询 [dfn[top[u]], dfn[u]] 区间</span></div>
+              <div style={{ paddingLeft: '40px' }}><span className="code-var">res</span> += <span className="code-func">segQuery</span>(<span className="code-var">dfn</span>[<span className="code-var">top</span>[u]], <span className="code-var">dfn</span>[u]);</div>
+              <div style={{ paddingLeft: '40px' }}><span className="code-var">u</span> = <span className="code-var">fa</span>[<span className="code-var">top</span>[u]]; <span className="code-comment">// 跳到链顶的父亲</span></div>
+              <div style={{ paddingLeft: '20px' }}>{'}'}</div>
+              <div style={{ paddingLeft: '20px' }}><span className="code-comment">// 同一条链，处理剩余部分</span></div>
+              <div style={{ paddingLeft: '20px' }}><span className="code-keyword">if</span> (<span className="code-var">dep</span>[u] {'>'} <span className="code-var">dep</span>[v]) <span className="code-var">swap</span>(<span className="code-var">u</span>, <span className="code-var">v</span>);</div>
+              <div style={{ paddingLeft: '20px' }}><span className="code-keyword">return</span> <span className="code-var">res</span> + <span className="code-func">segQuery</span>(<span className="code-var">dfn</span>[u], <span className="code-var">dfn</span>[v]);</div>
+              <div>{'}'}</div>
+            </Anim>
+            <Anim delay={900} className="flow" style={{ marginTop: '10px' }}>
+              <span className="tag tag-rose"><span className="lc lc-20"><i data-lucide="repeat"></i></span>循环 ≤ O(log n) 次</span>
+              <span className="tag tag-teal"><span className="lc lc-20"><i data-lucide="list-ordered"></i></span>每次区间查询 O(log n)</span>
+              <span className="tag tag-purple"><span className="lc lc-20"><i data-lucide="zap"></i></span>总复杂度 O(log² n)</span>
+            </Anim>
+            <div className="page-badge">5 / {totalSlides}</div>
+          </Slide>
+
+          <Slide id="s5" bgClass="bg-1" isActive={currentSlide === 5}>
+            <div className="grid-bg"></div>
+            <div className="deco deco-pink" style={{ width: '800px', height: '800px', top: '50%', left: '50%', marginTop: '-400px', marginLeft: '-400px', opacity: '.5' }}></div>
+
+            <Anim delay={200} className="t-mid c-gray">时间复杂度分析 ✨</Anim>
+            <Anim delay={400}>
+              <table className="comp-table">
+                <thead>
+                  <tr>
+                    <th>操作类型</th>
+                    <th>朴素做法</th>
+                    <th>树链剖分 + 线段树</th>
+                    <th>优化倍数</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>路径求和/最值</td>
+                    <td className="c-rose">O(n)</td>
+                    <td className="c-teal bold">O(log² n)</td>
+                    <td><span className="c-pink bold">≈ n / 400</span></td>
+                  </tr>
+                  <tr>
+                    <td>路径加法/赋值</td>
+                    <td className="c-rose">O(n)</td>
+                    <td className="c-teal bold">O(log² n)</td>
+                    <td><span className="c-pink bold">≈ n / 400</span></td>
+                  </tr>
+                  <tr>
+                    <td>子树查询/修改</td>
+                    <td className="c-rose">O(sz[u])</td>
+                    <td className="c-teal bold">O(log n)</td>
+                    <td><span className="c-pink bold">子树大小倍</span></td>
+                  </tr>
+                  <tr>
+                    <td>预处理</td>
+                    <td className="c-gray">-</td>
+                    <td className="c-purple bold">O(n)</td>
+                    <td className="c-gray">一次投入</td>
+                  </tr>
+                </tbody>
+              </table>
+            </Anim>
+            <Anim delay={700} className="concept-word" style={{ marginTop: '30px', fontSize: '4rem' }}>O(log² n)</Anim>
+            <Anim delay={900} className="t-sm c-gray" style={{ marginTop: '14px' }}>
+              💡 提示：树链剖分是 <span className="c-teal bold">思想</span>，具体实现需搭配 <span className="c-purple bold">线段树/树状数组</span>
+            </Anim>
+            <div className="page-badge">6 / {totalSlides}</div>
+          </Slide>
+
+          <Slide id="s6" bgClass="bg-2" isActive={currentSlide === 6}>
+            <div className="deco deco-peach" style={{ width: '400px', height: '400px', top: '-130px', left: '-130px' }}></div>
+
+            <Anim delay={200} className="t-mid c-gray">树链剖分的优劣势分析 🎯</Anim>
+            <Anim delay={400} className="two-col" style={{ marginTop: '20px' }}>
+              <div className="col-card shine" style={{ borderLeft: '6px solid #2EC4B6' }}>
+                <span className="lc lc-48 c-teal"><i data-lucide="circle-check"></i></span>
+                <div className="c-teal bold" style={{ fontSize: '1.8rem', marginTop: '8px' }}>优势</div>
+                <div className="vs-detail">
+                  <div className="vs-item vs-item-good"><span className="lc lc-20"><i data-lucide="check"></i></span>通用性强：任意树结构</div>
+                  <div className="vs-item vs-item-good"><span className="lc lc-20"><i data-lucide="check"></i></span>易实现：两次DFS + 线段树/树状数组</div>
+                  <div className="vs-item vs-item-good"><span className="lc lc-20"><i data-lucide="check"></i></span>竞赛高频：模板题必备</div>
+                </div>
+              </div>
+              <div className="col-card shine" style={{ borderLeft: '6px solid #F4A261' }}>
+                <span className="lc lc-48 c-orange"><i data-lucide="circle-alert"></i></span>
+                <div className="c-orange bold" style={{ fontSize: '1.8rem', marginTop: '8px' }}>注意</div>
+                <div className="vs-detail">
+                  <div className="vs-item" style={{ background: 'rgba(244,162,97,.1)', color: '#F4A261' }}><span className="lc lc-20"><i data-lucide="info"></i></span>常数略大于倍增LCA</div>
+                  <div className="vs-item" style={{ background: 'rgba(244,162,97,.1)', color: '#F4A261' }}><span className="lc lc-20"><i data-lucide="info"></i></span>需结合线段树/树状数组</div>
+                  <div className="vs-item" style={{ background: 'rgba(244,162,97,.1)', color: '#F4A261' }}><span className="lc lc-20"><i data-lucide="info"></i></span>静态树效果最佳</div>
+                </div>
+              </div>
+            </Anim>
+            <div className="page-badge">7 / {totalSlides}</div>
+          </Slide>
+
+          <Slide id="s7" bgClass="bg-3" isActive={currentSlide === 7}>
+            <div className="deco deco-lav" style={{ width: '450px', height: '450px', bottom: '-150px', right: '-150px' }}></div>
+
+            <Anim delay={200} className="t-mid c-gray">典型应用场景 🎯</Anim>
+            <Anim delay={400} className="mini-grid">
+              {[
+                {
+                  icon: 'git-merge',
+                  title: 'LCA 查询',
+                  desc: '替代倍增法，支持带权路径',
+                  tag: '基础应用',
+                  color: 'purple'
+                },
+                {
+                  icon: 'calculator',
+                  title: '路径统计',
+                  desc: '求和/最值/异或/乘积等',
+                  tag: '线段树结合',
+                  color: 'teal'
+                },
+                {
+                  icon: 'refresh-cw',
+                  title: '路径修改',
+                  desc: '区间加/赋值/翻转等',
+                  tag: '懒标记',
+                  color: 'pink'
+                },
+                {
+                  icon: 'users',
+                  title: '子树操作',
+                  desc: 'DFS序天然支持子树区间',
+                  tag: '额外福利',
+                  color: 'orange'
+                },
+                {
+                  icon: 'network',
+                  title: '动态树简化',
+                  desc: '静态树上替代Link-Cut Tree',
+                  tag: '实用技巧',
+                  color: 'blue'
+                },
+                {
+                  icon: 'trophy',
+                  title: '竞赛模板',
+                  desc: 'NOI/ICPC 高频考点',
+                  tag: '必备技能',
+                  color: 'rose'
+                }
+              ].map((item, i) => (
+                <div key={i} className="mini-card shine">
+                  <div className="icon-badge ib-rose">
+                    <span className={`lc lc-36 c-${item.color}`}><i data-lucide={item.icon}></i></span>
+                  </div>
+                  <div style={{ fontSize: '1.1rem', fontWeight: 700 }}>{item.title}</div>
+                  <div className="t-sm c-gray">{item.desc}</div>
+                  <div className={`tag tag-${item.color}`}>{item.tag}</div>
+                </div>
+              ))}
+            </Anim>
+            <Anim delay={900} className="t-sm c-gray" style={{ marginTop: '14px' }}>
+              💡 提示：树链剖分是 <span className="c-teal bold">思想</span>，具体实现需搭配 <span className="c-purple bold">线段树/树状数组</span>
+            </Anim>
+            <div className="page-badge">8 / {totalSlides}</div>
+          </Slide>
+
+          <Slide id="s8" bgClass="bg-4" isActive={currentSlide === 8}>
+            <div className="grid-bg"></div>
+            <Particles containerId="particles-s8" />
+            <div className="deco deco-pink" style={{ width: '800px', height: '800px', top: '50%', left: '50%', marginTop: '-400px', marginLeft: '-400px', opacity: '.5' }}></div>
+
+            <Anim delay={200} className="t-mid c-gray italic">核心要点回顾 (｡･ω･｡)✓</Anim>
+            <Anim delay={400} className="shape-grid" style={{ margin: '20px 0' }}>
+              <div className="shape-circle sh-lg st" style={{ boxShadow: '0 8px 24px rgba(46,196,182,.3)' }}>
+                <span className="lc lc-28 c-white"><i data-lucide="git-branch"></i></span>重链
+              </div>
+              <div className="shape-circle sh-lg sp" style={{ boxShadow: '0 8px 24px rgba(255,107,53,.3)' }}>
+                <span className="lc lc-28 c-white"><i data-lucide="repeat"></i></span>两次DFS
+              </div>
+              <div className="shape-circle sh-lg so" style={{ boxShadow: '0 8px 24px rgba(244,162,97,.3)' }}>
+                <span className="lc lc-28 c-white"><i data-lucide="list-ordered"></i></span>DFS序
+              </div>
+            </Anim>
+            <Anim delay={600} className="t-mid c-dark">路径查询 → 拆链 → 区间操作 ✧*｡٩(ˊᗜˋ*)و✧*｡</Anim>
+            <Anim delay={800} className="line" style={{ margin: '16px auto' }}></Anim>
+            <Anim delay={1000} className="final-word" style={{ marginTop: '6px' }}>Heavy-Light Decomposition</Anim>
+            <Anim delay={1200} className="glow-text" style={{ marginTop: '10px' }}>树 · 链 · 剖 · 分</Anim>
+
+            <Anim delay={1400} className="icon-row" style={{ marginTop: '20px' }}>
+              <div className="glow-ring"><span className="lc lc-40 c-pink"><i data-lucide="book-open"></i></span></div>
+              <div className="glow-ring" style={{ animationDelay: '.3s' }}><span className="lc lc-40 c-teal"><i data-lucide="code"></i></span></div>
+              <div className="glow-ring" style={{ animationDelay: '.6s' }}><span className="lc lc-40 c-purple"><i data-lucide="cpu"></i></span></div>
+              <div className="glow-ring" style={{ animationDelay: '.9s' }}><span className="lc lc-40 c-orange"><i data-lucide="award"></i></span></div>
+            </Anim>
+
+            <Anim delay={1600} style={{ marginTop: '24px', textAlign: 'center' }}>
+              <div className="flow" style={{ marginTop: '8px' }}>
+                📚 推荐资源：
+                <span className="tag tag-blue"><i data-lucide="external-link" className="lc-16"></i> OI-Wiki 树剖专题</span>
+                <span className="tag tag-teal"><i data-lucide="code" className="lc-16"></i> 模板代码仓库</span>
+                <span className="tag tag-purple"><i data-lucide="video" className="lc-16"></i> Hans码数理哲的视频</span>
+              </div>
+            </Anim>
+
+            <div className="page-badge">9 / {totalSlides}</div>
+          </Slide>
+
+          {/* ========== Slide Indicator ========== */}
+          <div className="slide-indicator">
+            {[...Array(totalSlides)].map((_, i) => (
+              <div
+                key={i}
+                className={`dot ${i === currentSlide ? 'active' : ''}`}
+                onClick={() => goToSlide(i)}
+                style={{ cursor: 'pointer' }}
+              />
+            ))}
+          </div>
+
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+
+</html>
