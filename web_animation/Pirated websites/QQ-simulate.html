@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
     <title>QQ聊天演示 - 钓鱼网站场景</title>
     <style>
         /* 全局样式重置 */
@@ -171,7 +175,8 @@
         /* 顶部标题栏（QQ经典蓝色） */
         .chat-header {
             height: 40px;
-            background-color: #2c7be5; /* QQ蓝 */
+            background-color: #2c7be5;
+            /* QQ蓝 */
             color: #fff;
             display: flex;
             align-items: center;
@@ -313,12 +318,12 @@
 
         /* 对方头像（赤川鹤鸣） */
         .left-chat .chat-avatar {
-            background-image: url('PNG/xc.png');
+            background-image: url('PNG/xc.jpg');
         }
 
         /* 自己头像（网络小白） */
         .right-chat .chat-avatar {
-            background-image: url('PNG/xb.png');
+            background-image: url('PNG/xb.jpg');
         }
 
         /* 消息气泡 */
@@ -427,7 +432,8 @@
         .send-btn {
             width: 60px;
             height: 36px;
-            background-color: #2c7be5; /* QQ蓝按钮 */
+            background-color: #2c7be5;
+            /* QQ蓝按钮 */
             color: #fff;
             border: none;
             border-radius: 18px;
@@ -612,6 +618,7 @@
         }
     </style>
 </head>
+
 <body>
     <!-- QQ聊天窗口 -->
     <div class="qq-chat-window">
@@ -621,81 +628,106 @@
             <div class="friends-list-header">
                 <span>好友列表</span>
             </div>
-            
+
             <!-- 搜索框 -->
             <div class="friends-list-search">
-                <input type="text" class="search-input" placeholder="搜索好友...">
+                <input
+                    type="text"
+                    class="search-input"
+                    placeholder="搜索好友..."
+                >
             </div>
-            
+
             <!-- 好友分组：我的好友 -->
             <div class="friends-group">
                 <div class="group-header">
                     <div class="group-name">我的好友</div>
                     <div class="group-count">5</div>
                 </div>
-                
+
                 <!-- 好友项 -->
                 <div class="friend-item active">
-                    <div class="friend-avatar" style="background-image: url('PNG/xc.png');"></div>
+                    <div
+                        class="friend-avatar"
+                        style="background-image: url('PNG/xc.jpg');"
+                    ></div>
                     <div class="friend-info">
                         <div class="friend-name">赤川鹤鸣_Channel</div>
                         <div class="friend-status">在线</div>
                     </div>
                     <div class="friend-online"></div>
                 </div>
-                
+
                 <div class="friend-item">
-                    <div class="friend-avatar" style="background-image: url('PNG/xb.png');"></div>
+                    <div
+                        class="friend-avatar"
+                        style="background-image: url('PNG/xb.jpg');"
+                    ></div>
                     <div class="friend-info">
-                        <div class="friend-name">网络小白_Uncle城</div>
+                        <div class="friend-name">Hans码数理哲</div>
                         <div class="friend-status">在线</div>
                     </div>
                     <div class="friend-online"></div>
                 </div>
-                
+
                 <div class="friend-item">
-                    <div class="friend-avatar" style="background-image: url('PNG/he.png');"></div>
+                    <div
+                        class="friend-avatar"
+                        style="background-image: url('PNG/he.png');"
+                    ></div>
                     <div class="friend-info">
                         <div class="friend-name">老师好我叫何同学</div>
                         <div class="friend-status">离线</div>
                     </div>
                 </div>
-                
+
                 <div class="friend-item">
-                    <div class="friend-avatar" style="background-image: url('PNG/xz.png');"></div>
+                    <div
+                        class="friend-avatar"
+                        style="background-image: url('PNG/xz.png');"
+                    ></div>
                     <div class="friend-info">
                         <div class="friend-name">客服祥子</div>
                         <div class="friend-status">离线</div>
                     </div>
                 </div>
-                
+
                 <div class="friend-item">
-                    <div class="friend-avatar" style="background-image: url('PNG/xl.png');"></div>
+                    <div
+                        class="friend-avatar"
+                        style="background-image: url('PNG/xl.png');"
+                    ></div>
                     <div class="friend-info">
                         <div class="friend-name">橘雪莉</div>
                         <div class="friend-status">已处刑</div>
                     </div>
                 </div>
             </div>
-            
+
             <!-- 好友分组：群聊 -->
             <div class="friends-group">
                 <div class="group-header">
                     <div class="group-name">群聊</div>
                     <div class="group-count">2</div>
                 </div>
-                
+
                 <!-- 群聊项 -->
                 <div class="friend-item">
-                    <div class="friend-avatar" style="background-image: url('PNG/whj.png');"></div>
+                    <div
+                        class="friend-avatar"
+                        style="background-image: url('PNG/whj.png');"
+                    ></div>
                     <div class="friend-info">
                         <div class="friend-name">游戏交流群</div>
                         <div class="friend-status">32人在线</div>
                     </div>
                 </div>
-                
+
                 <div class="friend-item">
-                    <div class="friend-avatar" style="background-image: url('PNG/JM.png');"></div>
+                    <div
+                        class="friend-avatar"
+                        style="background-image: url('PNG/JM.png');"
+                    ></div>
                     <div class="friend-info">
                         <div class="friend-name">学习讨论组</div>
                         <div class="friend-status">8人在线</div>
@@ -703,7 +735,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- 右侧聊天区域 -->
         <div class="chat-area">
             <!-- 顶部标题栏 -->
@@ -741,7 +773,7 @@
                 <!-- 自己消息：回应 -->
                 <div class="chat-message right-chat">
                     <div class="chat-content-wrap">
-                        <div class="chat-nickname">网络小白_Uncle城</div>
+                        <div class="chat-nickname">Hans码数理哲</div>
                         <div class="chat-bubble">
                             在呢，最近挺无聊的，有什么好玩的吗？
                         </div>
@@ -766,7 +798,10 @@
                     <div class="chat-content-wrap">
                         <div class="chat-nickname">赤川鹤鸣_Channel</div>
                         <div class="chat-bubble">
-                            <div class="chat-link" id="phishing-link">https://example-fake.com/haokangde</div>
+                            <div
+                                class="chat-link"
+                                id="phishing-link"
+                            >https://example-fake.com/haokangde</div>
                             哇偶，是好康的
                         </div>
                     </div>
@@ -775,7 +810,7 @@
                 <!-- 自己消息：点击链接后的反应 -->
                 <div class="chat-message right-chat">
                     <div class="chat-content-wrap">
-                        <div class="chat-nickname">网络小白_Uncle城</div>
+                        <div class="chat-nickname">Hans码数理哲</div>
                         <div class="chat-bubble">
                             我点了！这居然是钓鱼网站😭
                         </div>
@@ -786,7 +821,7 @@
                 <!-- 自己消息：后续反应 -->
                 <div class="chat-message right-chat">
                     <div class="chat-content-wrap">
-                        <div class="chat-nickname">网络小白_Uncle城</div>
+                        <div class="chat-nickname">Hans码数理哲</div>
                         <div class="chat-bubble">
                             它让我输入QQ账号密码，我差点就输了！
                         </div>
@@ -808,7 +843,7 @@
                 <!-- 自己消息：警惕 -->
                 <div class="chat-message right-chat">
                     <div class="chat-content-wrap">
-                        <div class="chat-nickname">网络小白_Uncle城</div>
+                        <div class="chat-nickname">Hans码数理哲</div>
                         <div class="chat-bubble">
                             不对，那个网站的URL明显有问题，是fake域名，而且页面做的很粗糙，肯定是钓鱼网站！
                         </div>
@@ -839,7 +874,10 @@
                     <div class="toolbar-btn">🌙</div>
                 </div>
                 <div class="chat-footer-input">
-                    <textarea class="input-area" placeholder="请输入消息..."></textarea>
+                    <textarea
+                        class="input-area"
+                        placeholder="请输入消息..."
+                    ></textarea>
                     <button class="send-btn">发送</button>
                 </div>
             </div>
@@ -847,10 +885,16 @@
     </div>
 
     <!-- 模态框覆盖层 -->
-    <div class="modal-overlay" id="modalOverlay"></div>
+    <div
+        class="modal-overlay"
+        id="modalOverlay"
+    ></div>
 
     <!-- 钓鱼网站提示框 -->
-    <div class="tip-modal" id="tipModal">
+    <div
+        class="tip-modal"
+        id="tipModal"
+    >
         <div class="danger-icon">⚠️</div>
         <h3>危险！钓鱼网站警告</h3>
         <p>您点击的链接疑似钓鱼网站，请勿输入任何账号密码信息！</p>
@@ -863,15 +907,15 @@
 
     <script>
         // 点击链接弹出提示框
-        document.getElementById('phishing-link').addEventListener('click', function(e) {
+        document.getElementById('phishing-link').addEventListener('click', function (e) {
             e.preventDefault();
             const tipModal = document.getElementById('tipModal');
             const modalOverlay = document.getElementById('modalOverlay');
-            
+
             // 添加显示类
             tipModal.classList.add('show');
             modalOverlay.classList.add('show');
-            
+
             // 禁止背景滚动
             document.body.style.overflow = 'hidden';
         });
@@ -880,11 +924,11 @@
         function closeTip() {
             const tipModal = document.getElementById('tipModal');
             const modalOverlay = document.getElementById('modalOverlay');
-            
+
             // 移除显示类
             tipModal.classList.remove('show');
             modalOverlay.classList.remove('show');
-            
+
             // 恢复背景滚动
             document.body.style.overflow = 'auto';
         }
@@ -893,21 +937,21 @@
         document.getElementById('modalOverlay').addEventListener('click', closeTip);
 
         // 模拟发送按钮点击（演示用，无实际发送功能）
-        document.querySelector('.send-btn').addEventListener('click', function() {
+        document.querySelector('.send-btn').addEventListener('click', function () {
             const inputArea = document.querySelector('.input-area');
             if (inputArea.value.trim() === '') {
                 return;
             }
-            
+
             // 简单的发送动画效果
             this.textContent = '发送中...';
             this.disabled = true;
-            
+
             setTimeout(() => {
                 this.textContent = '发送';
                 this.disabled = false;
                 inputArea.value = '';
-                
+
                 // 显示发送成功提示
                 const successTip = document.createElement('div');
                 successTip.style.cssText = `
@@ -926,13 +970,13 @@
                 `;
                 successTip.textContent = '消息发送成功！';
                 document.body.appendChild(successTip);
-                
+
                 // 显示提示
                 setTimeout(() => {
                     successTip.style.opacity = '1';
                     successTip.style.transform = 'translateY(0)';
                 }, 100);
-                
+
                 // 隐藏提示
                 setTimeout(() => {
                     successTip.style.opacity = '0';
@@ -946,7 +990,7 @@
 
         // 输入框自动调整高度
         const inputArea = document.querySelector('.input-area');
-        inputArea.addEventListener('input', function() {
+        inputArea.addEventListener('input', function () {
             this.style.height = 'auto';
             this.style.height = Math.min(this.scrollHeight, 120) + 'px';
         });
@@ -954,7 +998,7 @@
         // 窗口控制按钮功能
         const windowControls = document.querySelectorAll('.window-control');
         windowControls.forEach(control => {
-            control.addEventListener('click', function() {
+            control.addEventListener('click', function () {
                 if (this.textContent === '✕') {
                     alert('关闭窗口功能仅作展示～');
                 } else if (this.textContent === '🗗') {
@@ -970,7 +1014,7 @@
         // 工具栏按钮功能
         const toolbarBtns = document.querySelectorAll('.toolbar-btn');
         toolbarBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
+            btn.addEventListener('click', function () {
                 if (this.textContent === '😊') {
                     alert('表情功能仅作展示～');
                 } else if (this.textContent === '📷') {
@@ -990,17 +1034,17 @@
         // 好友列表交互
         const friendItems = document.querySelectorAll('.friend-item');
         friendItems.forEach(item => {
-            item.addEventListener('click', function() {
+            item.addEventListener('click', function () {
                 // 移除所有好友项的活跃状态
                 friendItems.forEach(i => i.classList.remove('active'));
                 // 添加当前好友项的活跃状态
                 this.classList.add('active');
-                
+
                 // 获取好友名称
                 const friendName = this.querySelector('.friend-name').textContent;
                 // 更新聊天窗口标题
                 document.querySelector('.title-text').textContent = friendName;
-                
+
                 // 这里可以添加切换聊天内容的逻辑
                 // 由于是演示，这里只做简单提示
                 if (friendName !== '赤川鹤鸣_Channel') {
@@ -1012,10 +1056,10 @@
         // 好友分组展开/收起功能
         const groupHeaders = document.querySelectorAll('.group-header');
         groupHeaders.forEach(header => {
-            header.addEventListener('click', function() {
+            header.addEventListener('click', function () {
                 const group = this.parentElement;
                 const friendItems = group.querySelectorAll('.friend-item');
-                
+
                 // 简单的展开/收起逻辑（演示用）
                 friendItems.forEach(item => {
                     if (item.style.display === 'none') {
@@ -1029,10 +1073,10 @@
 
         // 搜索功能
         const searchInput = document.querySelector('.search-input');
-        searchInput.addEventListener('input', function() {
+        searchInput.addEventListener('input', function () {
             const searchTerm = this.value.toLowerCase();
             const friendItems = document.querySelectorAll('.friend-item');
-            
+
             friendItems.forEach(item => {
                 const friendName = item.querySelector('.friend-name').textContent.toLowerCase();
                 if (friendName.includes(searchTerm)) {
@@ -1044,4 +1088,5 @@
         });
     </script>
 </body>
+
 </html>

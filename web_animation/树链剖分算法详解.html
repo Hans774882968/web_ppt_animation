@@ -1052,9 +1052,9 @@
             <Anim delay={1000} className="mini-grid">
               {[
                 { icon: 'git-branch', title: '路径查询', desc: 'O(log²n)', tag: '核心应用', color: 'pink' },
-                { icon: 'zap', title: '高效更新', desc: '区间修改', tag: '线段树结合', color: 'teal' },
+                { icon: 'zap', title: '高效更新', desc: '路径修改', tag: '结合线段树', color: 'teal' },
                 { icon: 'layers', title: '两次DFS', desc: '预处理O(n)', tag: '经典技巧', color: 'purple' },
-                { icon: 'target', title: 'LCA优化', desc: '倍增替代', tag: '竞赛必备', color: 'orange' }
+                { icon: 'target', title: 'LCA优化', desc: '替代倍增', tag: '竞赛必备', color: 'orange' }
               ].map((item, i) => (
                 <div key={i} className="mini-card shine">
                   <div className="icon-badge ib-rose">
@@ -1084,8 +1084,8 @@
                     <text x="60" y="55" textAnchor="middle" fill="#A7A9BE" fontSize="13">每次查询</text>
                     <text x="60" y="73" textAnchor="middle" fill="#FF6B35" fontSize="13" fontWeight="900">O(n)</text>
 
-                    <line x1="110" y1="50" x2="140" y2="50" stroke="#ccc" strokeWidth="2" strokeDasharray="4 3" />
-                    <polygon points="140,46 150,50 140,54" fill="#ccc" />
+                    <line x1="110" y1="50" x2="140" y2="50" stroke="#E8395B" strokeWidth="2" strokeDasharray="4 3" />
+                    <polygon points="140,46 150,50 140,54" fill="#E8395B" />
 
                     <rect x="150" y="15" width="100" height="70" rx="8" fill="rgba(255,107,53,.1)" stroke="#FF6B35" strokeWidth="2" />
                     <text x="200" y="38" textAnchor="middle" fill="#FF6B35" fontSize="14" fontWeight="700">10⁵ 次查询</text>
@@ -1107,7 +1107,6 @@
               <div className="col-card shine" style={{ borderLeft: '6px solid #2BA8A4' }}>
                 <div style={{ position: 'relative', width: '100%', display: 'flex', justifyContent: 'center' }}>
                   <svg width="280" height="100" viewBox="0 0 280 100">
-                    {/* HLD approach: O(log²n) */}
                     <rect x="10" y="15" width="100" height="70" rx="8" fill="rgba(46,196,182,.08)" stroke="#2EC4B6" strokeWidth="2" />
                     <text x="60" y="38" textAnchor="middle" fill="#2EC4B6" fontSize="14" fontWeight="700">树链剖分</text>
                     <text x="60" y="55" textAnchor="middle" fill="#A7A9BE" fontSize="13">路径拆分</text>
@@ -1146,11 +1145,11 @@
                 <div style={{ position: 'relative', width: '100%', display: 'flex', justifyContent: 'center' }}>
                   <svg width="260" height="220" viewBox="0 0 260 220">
                     {[
-                      { x: 130, y: 20, id: 1, heavy: true },
+                      { x: 130, y: 20, id: 1, heavy: false },
                       { x: 50, y: 80, id: 2, heavy: false },
                       { x: 130, y: 80, id: 3, heavy: true },
                       { x: 210, y: 80, id: 4, heavy: false },
-                      { x: 30, y: 140, id: 5, heavy: false },
+                      { x: 30, y: 140, id: 5, heavy: true },
                       { x: 70, y: 140, id: 6, heavy: true },
                       { x: 130, y: 140, id: 7, heavy: false },
                       { x: 210, y: 140, id: 9, heavy: false },
@@ -1174,11 +1173,11 @@
                     {/* Heavy edges (thick orange) */}
                     <line x1="130" y1="38" x2="130" y2="62" stroke="#FF6B35" strokeWidth="4" />
                     <line x1="130" y1="98" x2="70" y2="122" stroke="#FF6B35" strokeWidth="4" />
-                    <line x1="70" y1="158" x2="170" y2="182" stroke="#FF6B35" strokeWidth="4" strokeDasharray="8 2" />
+                    <line x1="70" y1="158" x2="170" y2="182" stroke="#FF6B35" strokeWidth="4" />
+                    <line x1="50" y1="98" x2="30" y2="122" stroke="#FF6B35" strokeWidth="4" />
                     {/* Light edges (dashed gray) */}
                     <line x1="130" y1="38" x2="50" y2="62" stroke="#A7A9BE" strokeWidth="2" strokeDasharray="4 2" />
                     <line x1="130" y1="38" x2="210" y2="62" stroke="#A7A9BE" strokeWidth="2" strokeDasharray="4 2" />
-                    <line x1="50" y1="98" x2="30" y2="122" stroke="#A7A9BE" strokeWidth="2" strokeDasharray="4 2" />
                     <line x1="130" y1="98" x2="130" y2="122" stroke="#A7A9BE" strokeWidth="2" strokeDasharray="4 2" />
                     <line x1="130" y1="98" x2="210" y2="122" stroke="#A7A9BE" strokeWidth="2" strokeDasharray="4 2" />
                     {/* Labels */}
@@ -1190,7 +1189,8 @@
                 <div className="t-body c-gray" style={{ textAlign: 'left', padding: '0 10px' }}>
                   • 子树大小最大的儿子为<span className="c-pink bold">重儿子</span><br />
                   • 连接重儿子的边叫<span className="c-pink bold">重边</span><br />
-                  • 重边连成的极大链叫<span className="c-teal bold">重链</span>
+                  • 重边连成的极大链叫<span className="c-teal bold">重链</span><br />
+                  • 特别地，约定根节点为<span className="c-teal bold">轻儿子</span>
                 </div>
               </div>
 
@@ -1206,7 +1206,13 @@
                       { y: 30, id: 1 }, { y: 90, id: 3 }, { y: 150, id: 6 }, { y: 210, id: 8 }
                     ].map((node, i) => (
                       <g key={node.id}>
-                        <circle cx="110" cy={node.y} r="16" fill="url(#heavyGrad)" stroke="#FF6B35" strokeWidth="2" />
+                        {
+                          i > 0 ? (
+                            <circle cx="110" cy={node.y} r="16" fill="url(#heavyGrad)" stroke="#FF6B35" strokeWidth="3" />
+                          ) : (
+                            <circle cx="110" cy={node.y} r="16" fill="rgba(127,90,240,.15)" stroke="#7F5AF0" strokeWidth="2" />
+                          )
+                        }
                         <text x="110" y={node.y + 5} textAnchor="middle" fill="#fff" fontSize="11" fontWeight="700">{node.id}</text>
                         {i < 3 && <line x1="110" y1={node.y + 16} x2="110" y2={node.y + 60 - 16} stroke="#FF6B35" strokeWidth="3" />}
                       </g>
@@ -1232,6 +1238,7 @@
                 <div className="t-body c-gray" style={{ textAlign: 'left', padding: '0 10px' }}>
                   • 任意节点到根，轻边 ≤ <span className="c-pink bold">log n</span> 条<br />
                   • 每条重链在DFS序中是<span className="c-teal bold">连续区间</span><br />
+                  • 每条重链的顶端都是<span className="c-teal bold">轻儿子</span><br />
                   • 路径查询 → 拆成 <span className="c-purple bold">O(log n)</span> 个区间
                 </div>
               </div>
@@ -1245,11 +1252,11 @@
             <div className="deco deco-peach" style={{ width: '500px', height: '500px', top: '-220px', left: '50%', marginLeft: '-250px' }}></div>
 
             <Anim delay={200} className="t-mid c-gray">预处理：两次 DFS 遍历 (｡･ω･｡)</Anim>
-            <Anim delay={400} className="two-col">
+            <Anim delay={400} className="two-col mt-4">
               <div className="col-card shine" style={{ borderLeft: '6px solid #FF6B35', flex: '1.1' }}>
                 <div className="t-mid c-dark" style={{ marginBottom: '10px' }}><span className="lc lc-28 c-pink"><i data-lucide="arrow-down"></i></span> DFS₁：计算子树信息</div>
                 <div className="code-block" style={{ width: '100%', maxWidth: '500px' }}>
-                  <div><span className="code-keyword">void</span> <span className="code-func">dfs1</span>(<span className="code-var">u</span>, <span className="code-var">fa</span>) {'{'}</div>
+                  <div><span className="code-keyword">void</span> <span className="code-func">dfs1</span>(<span className="code-keyword">int</span> <span className="code-var">u</span>, <span className="code-keyword">int</span> <span className="code-var">fa</span>) {'{'}</div>
                   <div style={{ paddingLeft: '20px' }}><span className="code-var">sz</span>[u] = <span className="code-num">1</span>; <span className="code-comment">// 子树大小</span></div>
                   <div style={{ paddingLeft: '20px' }}><span className="code-keyword">for</span> (<span className="code-var">v</span> : <span className="code-var">adj</span>[u]) {'{'}</div>
                   <div style={{ paddingLeft: '40px' }}><span className="code-keyword">if</span> (<span className="code-var">v</span> == <span className="code-var">fa</span>) <span className="code-keyword">continue</span>;</div>
@@ -1271,14 +1278,14 @@
               <div className="col-card shine" style={{ borderLeft: '6px solid #2EC4B6', flex: '1.1' }}>
                 <div className="t-mid c-dark" style={{ marginBottom: '10px' }}><span className="lc lc-28 c-teal"><i data-lucide="arrow-down"></i></span> DFS₂：剖分重链</div>
                 <div className="code-block" style={{ width: '100%', maxWidth: '500px' }}>
-                  <div><span className="code-keyword">void</span> <span className="code-func">dfs2</span>(<span className="code-var">u</span>, <span className="code-var">top</span>) {'{'}</div>
-                  <div style={{ paddingLeft: '20px' }}><span className="code-var">top</span>[u] = <span className="code-var">top</span>; <span className="code-comment">// 链顶</span></div>
+                  <div><span className="code-keyword">void</span> <span className="code-func">dfs2</span>(<span className="code-keyword">int</span> <span className="code-var">u</span>, <span className="code-keyword">int</span> <span className="code-var">tp</span>) {'{'}</div>
+                  <div style={{ paddingLeft: '20px' }}><span className="code-var">top</span>[u] = <span className="code-var">tp</span>; <span className="code-comment">// 链顶</span></div>
                   <div style={{ paddingLeft: '20px' }}><span className="code-var">dfn</span>[u] = ++<span className="code-var">timer</span>; <span className="code-comment">// DFS序</span></div>
                   <div style={{ paddingLeft: '20px' }}><span className="code-var">rnk</span>[<span className="code-var">timer</span>] = <span className="code-var">u</span>; <span className="code-comment">// 逆映射</span></div>
                   <div style={{ paddingLeft: '20px' }}><span className="code-comment">// 先走重儿子，保证重链连续</span></div>
-                  <div style={{ paddingLeft: '20px' }}><span className="code-keyword">if</span> (<span className="code-var">son</span>[u]) <span className="code-func">dfs2</span>(<span className="code-var">son</span>[u], <span className="code-var">top</span>);</div>
+                  <div style={{ paddingLeft: '20px' }}><span className="code-keyword">if</span> (<span className="code-var">son</span>[u]) <span className="code-func">dfs2</span>(<span className="code-var">son</span>[u], <span className="code-var">tp</span>);</div>
                   <div style={{ paddingLeft: '20px' }}><span className="code-keyword">for</span> (<span className="code-var">v</span> : <span className="code-var">adj</span>[u]) {'{'}</div>
-                  <div style={{ paddingLeft: '40px' }}><span className="code-keyword">if</span> (<span className="code-var">v</span>==<span className="code-var">fa</span>[u] || <span className="code-var">v</span>==<span className="code-var">son</span>[u]) <span className="code-keyword">continue</span>;</div>
+                  <div style={{ paddingLeft: '40px' }}><span className="code-keyword">if</span> (<span className="code-var">v</span> == <span className="code-var">fa</span>[u] || <span className="code-var">v</span> == <span className="code-var">son</span>[u]) <span className="code-keyword">continue</span>;</div>
                   <div style={{ paddingLeft: '40px' }}><span className="code-func">dfs2</span>(<span className="code-var">v</span>, <span className="code-var">v</span>); <span className="code-comment">// 轻边新链</span></div>
                   <div style={{ paddingLeft: '20px' }}>{'}'}</div>
                   <div>{'}'}</div>
@@ -1289,7 +1296,7 @@
                 </div>
               </div>
             </Anim>
-            <Anim delay={800} className="t-sm c-gray" style={{ marginTop: '14px' }}>
+            <Anim delay={800} className="t-sm c-gray mt-4">
               预处理时间复杂度：<span className="c-teal bold">O(n)</span> ｜ 空间复杂度：<span className="c-teal bold">O(n)</span>
             </Anim>
             <div className="page-badge">4 / {totalSlides}</div>
@@ -1347,8 +1354,8 @@
               </svg>
             </Anim>
             <Anim delay={600} className="code-block" style={{ width: '90%', maxWidth: '600px', marginTop: '10px' }}>
-              <div><span className="code-keyword">int</span> <span className="code-func">queryPath</span>(<span className="code-var">u</span>, <span className="code-var">v</span>) {'{'}</div>
-              <div style={{ paddingLeft: '20px' }}><span className="code-var">int</span> <span className="code-var">res</span> = <span className="code-num">0</span>;</div>
+              <div><span className="code-keyword">int</span> <span className="code-func">queryPath</span>(<span className="code-keyword">int</span> <span className="code-var">u</span>, <span className="code-keyword">int</span> <span className="code-var">v</span>) {'{'}</div>
+              <div style={{ paddingLeft: '20px' }}><span className="code-keyword">int</span> <span className="code-var">res</span> = <span className="code-num">0</span>;</div>
               <div style={{ paddingLeft: '20px' }}><span className="code-keyword">while</span> (<span className="code-var">top</span>[u] != <span className="code-var">top</span>[v]) {'{'}</div>
               <div style={{ paddingLeft: '40px' }}><span className="code-comment">// 让深度大的链往上跳</span></div>
               <div style={{ paddingLeft: '40px' }}><span className="code-keyword">if</span> (<span className="code-var">dep</span>[<span className="code-var">top</span>[u]] {'<'} <span className="code-var">dep</span>[<span className="code-var">top</span>[v]]) <span className="code-var">swap</span>(<span className="code-var">u</span>, <span className="code-var">v</span>);</div>
@@ -1412,7 +1419,7 @@
                 </tbody>
               </table>
             </Anim>
-            <Anim delay={700} className="concept-word" style={{ marginTop: '30px', fontSize: '4rem' }}>O(log² n)</Anim>
+            <Anim delay={700} className="concept-word" style={{ marginTop: '30px', fontSize: '4rem' }}>总复杂度：O(n+qlog²(n))</Anim>
             <Anim delay={900} className="t-sm c-gray" style={{ marginTop: '14px' }}>
               💡 提示：树链剖分是 <span className="c-teal bold">思想</span>，具体实现需搭配 <span className="c-purple bold">线段树/树状数组</span>
             </Anim>
@@ -1438,7 +1445,7 @@
                 <div className="c-orange bold" style={{ fontSize: '1.8rem', marginTop: '8px' }}>注意</div>
                 <div className="vs-detail">
                   <div className="vs-item" style={{ background: 'rgba(244,162,97,.1)', color: '#F4A261' }}><span className="lc lc-20"><i data-lucide="info"></i></span>常数略大于倍增LCA</div>
-                  <div className="vs-item" style={{ background: 'rgba(244,162,97,.1)', color: '#F4A261' }}><span className="lc lc-20"><i data-lucide="info"></i></span>需结合线段树/树状数组</div>
+                  <div className="vs-item" style={{ background: 'rgba(244,162,97,.1)', color: '#F4A261' }}><span className="lc lc-20"><i data-lucide="info"></i></span>需熟练掌握线段树/树状数组</div>
                   <div className="vs-item" style={{ background: 'rgba(244,162,97,.1)', color: '#F4A261' }}><span className="lc lc-20"><i data-lucide="info"></i></span>静态树效果最佳</div>
                 </div>
               </div>
@@ -1450,7 +1457,7 @@
             <div className="deco deco-lav" style={{ width: '450px', height: '450px', bottom: '-150px', right: '-150px' }}></div>
 
             <Anim delay={200} className="t-mid c-gray">典型应用场景 🎯</Anim>
-            <Anim delay={400} className="mini-grid">
+            <Anim delay={400} className="mini-grid mt-4">
               {[
                 {
                   icon: 'git-merge',
@@ -1463,7 +1470,7 @@
                   icon: 'calculator',
                   title: '路径统计',
                   desc: '求和/最值/异或/乘积等',
-                  tag: '线段树结合',
+                  tag: '结合线段树',
                   color: 'teal'
                 },
                 {
@@ -1505,7 +1512,7 @@
                 </div>
               ))}
             </Anim>
-            <Anim delay={900} className="t-sm c-gray" style={{ marginTop: '14px' }}>
+            <Anim delay={900} className="t-sm c-gray" style={{ marginTop: '16px' }}>
               💡 提示：树链剖分是 <span className="c-teal bold">思想</span>，具体实现需搭配 <span className="c-purple bold">线段树/树状数组</span>
             </Anim>
             <div className="page-badge">8 / {totalSlides}</div>
@@ -1519,13 +1526,16 @@
             <Anim delay={200} className="t-mid c-gray italic">核心要点回顾 (｡･ω･｡)✓</Anim>
             <Anim delay={400} className="shape-grid" style={{ margin: '20px 0' }}>
               <div className="shape-circle sh-lg st" style={{ boxShadow: '0 8px 24px rgba(46,196,182,.3)' }}>
-                <span className="lc lc-28 c-white"><i data-lucide="git-branch"></i></span>重链
+                <span className="lc lc-28 c-white"><i data-lucide="git-branch"></i></span>剖分重链
               </div>
               <div className="shape-circle sh-lg sp" style={{ boxShadow: '0 8px 24px rgba(255,107,53,.3)' }}>
                 <span className="lc lc-28 c-white"><i data-lucide="repeat"></i></span>两次DFS
               </div>
               <div className="shape-circle sh-lg so" style={{ boxShadow: '0 8px 24px rgba(244,162,97,.3)' }}>
                 <span className="lc lc-28 c-white"><i data-lucide="list-ordered"></i></span>DFS序
+              </div>
+              <div className="shape-circle sh-lg st" style={{ boxShadow: '0 8px 24px rgba(46,196,182,.3)' }}>
+                <span className="lc lc-28 c-white"><i data-lucide="git-branch"></i></span>跳重链
               </div>
             </Anim>
             <Anim delay={600} className="t-mid c-dark">路径查询 → 拆链 → 区间操作 ✧*｡٩(ˊᗜˋ*)و✧*｡</Anim>

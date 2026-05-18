@@ -1,13 +1,20 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
   <title>QQ界面</title>
   <!-- 引入外部资源 -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-  
+  <link
+    href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"
+    rel="stylesheet"
+  >
+
   <!-- Tailwind 配置 -->
   <script>
     tailwind.config = {
@@ -32,7 +39,7 @@
       }
     }
   </script>
-  
+
   <!-- 自定义工具类 -->
   <style type="text/tailwindcss">
     @layer utilities {
@@ -54,45 +61,58 @@
       }
     }
   </style>
-  
+
   <!-- 基础样式 -->
   <style>
     body {
       font-family: 'Inter', system-ui, -apple-system, sans-serif;
       overflow: hidden;
     }
-    
+
     /* 滚动条样式 */
     .custom-scrollbar::-webkit-scrollbar {
       width: 6px;
     }
+
     .custom-scrollbar::-webkit-scrollbar-track {
       background: #f1f1f1;
       border-radius: 3px;
     }
+
     .custom-scrollbar::-webkit-scrollbar-thumb {
       background: #c1c1c1;
       border-radius: 3px;
     }
+
     .custom-scrollbar::-webkit-scrollbar-thumb:hover {
       background: #a8a8a8;
     }
-    
+
     /* 头像悬停动画 */
     .avatar-hover {
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
+
     .avatar-hover:hover {
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
-    
+
     /* 消息提示动画 */
     @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-      100% { transform: scale(1); }
+      0% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.05);
+      }
+
+      100% {
+        transform: scale(1);
+      }
     }
+
     .pulse-animation {
       animation: pulse 2s infinite;
     }
@@ -106,15 +126,19 @@
       <!-- 用户信息 -->
       <div class="p-4 flex items-center">
         <div class="relative">
-          <img src="PNG/xny.jpg" alt="个人头像" class="w-12 h-12 rounded-full border-2 border-secondary object-cover avatar-hover">
+          <img
+            src="PNG/xny.jpg"
+            alt="个人头像"
+            class="w-12 h-12 rounded-full border-2 border-secondary object-cover avatar-hover"
+          >
           <div class="absolute bottom-0 right-0 w-3 h-3 bg-secondary rounded-full border-2 border-dark"></div>
         </div>
-        
+
         <div class="ml-3 hidden md:block">
           <h3 class="font-medium text-sm">我的账号</h3>
           <p class="text-xs text-gray-400">在线</p>
         </div>
-        
+
         <div class="ml-auto hidden md:flex space-x-2">
           <button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-dark-light transition-all-200">
             <i class="fa fa-search text-gray-400"></i>
@@ -124,43 +148,58 @@
           </button>
         </div>
       </div>
-      
+
       <!-- 功能导航 -->
       <nav class="mt-4 px-2">
         <ul class="space-y-1">
           <li>
-            <a href="#" class="flex items-center p-2 rounded-lg bg-primary/20 text-white">
+            <a
+              href="#"
+              class="flex items-center p-2 rounded-lg bg-primary/20 text-white"
+            >
               <i class="fa fa-comment fa-lg w-8 text-center"></i>
               <span class="ml-3 hidden md:block">消息</span>
             </a>
           </li>
           <li>
-            <a href="#" class="flex items-center p-2 rounded-lg hover:bg-dark-light transition-all-200">
+            <a
+              href="#"
+              class="flex items-center p-2 rounded-lg hover:bg-dark-light transition-all-200"
+            >
               <i class="fa fa-users fa-lg w-8 text-center"></i>
               <span class="ml-3 hidden md:block">联系人</span>
             </a>
           </li>
           <li>
-            <a href="#" class="flex items-center p-2 rounded-lg hover:bg-dark-light transition-all-200">
+            <a
+              href="#"
+              class="flex items-center p-2 rounded-lg hover:bg-dark-light transition-all-200"
+            >
               <i class="fa fa-star-o fa-lg w-8 text-center"></i>
               <span class="ml-3 hidden md:block">收藏</span>
             </a>
           </li>
           <li>
-            <a href="#" class="flex items-center p-2 rounded-lg hover:bg-dark-light transition-all-200">
+            <a
+              href="#"
+              class="flex items-center p-2 rounded-lg hover:bg-dark-light transition-all-200"
+            >
               <i class="fa fa-folder-o fa-lg w-8 text-center"></i>
               <span class="ml-3 hidden md:block">文件</span>
             </a>
           </li>
           <li>
-            <a href="#" class="flex items-center p-2 rounded-lg hover:bg-dark-light transition-all-200">
+            <a
+              href="#"
+              class="flex items-center p-2 rounded-lg hover:bg-dark-light transition-all-200"
+            >
               <i class="fa fa-bar-chart fa-lg w-8 text-center"></i>
               <span class="ml-3 hidden md:block">动态</span>
             </a>
           </li>
         </ul>
       </nav>
-      
+
       <!-- 分组列表 -->
       <div class="mt-6 flex-1 overflow-y-auto custom-scrollbar">
         <div class="px-2">
@@ -173,13 +212,23 @@
               </div>
               <span class="hidden md:block">5</span>
             </div>
-            
+
             <!-- 好友列表 -->
             <ul class="space-y-1 pl-1">
-              <li class="friend-item bg-primary/10" data-id="1">
-                <a href="#" class="flex items-center p-2 rounded-lg hover:bg-primary/20 transition-all-200">
+              <li
+                class="friend-item bg-primary/10"
+                data-id="1"
+              >
+                <a
+                  href="#"
+                  class="flex items-center p-2 rounded-lg hover:bg-primary/20 transition-all-200"
+                >
                   <div class="relative">
-                    <img src="PNG/gsd.jpg" alt="高松灯" class="w-10 h-10 rounded-full object-cover avatar-hover">
+                    <img
+                      src="PNG/gsd.jpg"
+                      alt="高松灯"
+                      class="w-10 h-10 rounded-full object-cover avatar-hover"
+                    >
                     <div class="absolute bottom-0 right-0 w-2 h-2 bg-secondary rounded-full border border-dark"></div>
                   </div>
                   <div class="ml-3 hidden md:block">
@@ -192,11 +241,21 @@
                   </div>
                 </a>
               </li>
-              
-              <li class="friend-item" data-id="2">
-                <a href="#" class="flex items-center p-2 rounded-lg hover:bg-dark-light transition-all-200">
+
+              <li
+                class="friend-item"
+                data-id="2"
+              >
+                <a
+                  href="#"
+                  class="flex items-center p-2 rounded-lg hover:bg-dark-light transition-all-200"
+                >
                   <div class="relative">
-                    <img src="PNG/rym.jpg" alt="若叶睦" class="w-10 h-10 rounded-full object-cover avatar-hover">
+                    <img
+                      src="PNG/rym.jpg"
+                      alt="若叶睦"
+                      class="w-10 h-10 rounded-full object-cover avatar-hover"
+                    >
                     <div class="absolute bottom-0 right-0 w-2 h-2 bg-secondary rounded-full border border-dark"></div>
                   </div>
                   <div class="ml-3 hidden md:block">
@@ -208,11 +267,21 @@
                   </div>
                 </a>
               </li>
-              
-              <li class="friend-item" data-id="3">
-                <a href="#" class="flex items-center p-2 rounded-lg hover:bg-dark-light transition-all-200">
+
+              <li
+                class="friend-item"
+                data-id="3"
+              >
+                <a
+                  href="#"
+                  class="flex items-center p-2 rounded-lg hover:bg-dark-light transition-all-200"
+                >
                   <div class="relative">
-                    <img src="PNG/cqss.png" alt="长崎爽世" class="w-10 h-10 rounded-full object-cover avatar-hover">
+                    <img
+                      src="PNG/cqss.png"
+                      alt="长崎爽世"
+                      class="w-10 h-10 rounded-full object-cover avatar-hover"
+                    >
                     <div class="absolute bottom-0 right-0 w-2 h-2 bg-gray-500 rounded-full border border-dark"></div>
                   </div>
                   <div class="ml-3 hidden md:block">
@@ -224,11 +293,21 @@
                   </div>
                 </a>
               </li>
-              
-              <li class="friend-item" data-id="4">
-                <a href="#" class="flex items-center p-2 rounded-lg hover:bg-dark-light transition-all-200">
+
+              <li
+                class="friend-item"
+                data-id="4"
+              >
+                <a
+                  href="#"
+                  class="flex items-center p-2 rounded-lg hover:bg-dark-light transition-all-200"
+                >
                   <div class="relative">
-                    <img src="PNG/riky.jpg" alt="椎名立希" class="w-10 h-10 rounded-full object-cover avatar-hover">
+                    <img
+                      src="PNG/riky.jpg"
+                      alt="椎名立希"
+                      class="w-10 h-10 rounded-full object-cover avatar-hover"
+                    >
                     <div class="absolute bottom-0 right-0 w-2 h-2 bg-secondary rounded-full border border-dark"></div>
                   </div>
                   <div class="ml-3 hidden md:block">
@@ -240,11 +319,21 @@
                   </div>
                 </a>
               </li>
-              
-              <li class="friend-item" data-id="5">
-                <a href="#" class="flex items-center p-2 rounded-lg hover:bg-dark-light transition-all-200">
+
+              <li
+                class="friend-item"
+                data-id="5"
+              >
+                <a
+                  href="#"
+                  class="flex items-center p-2 rounded-lg hover:bg-dark-light transition-all-200"
+                >
                   <div class="relative">
-                    <img src="PNG/fcxz.jpg" alt="丰川祥子" class="w-10 h-10 rounded-full object-cover avatar-hover">
+                    <img
+                      src="PNG/fcxz.jpg"
+                      alt="丰川祥子"
+                      class="w-10 h-10 rounded-full object-cover avatar-hover"
+                    >
                     <div class="absolute bottom-0 right-0 w-2 h-2 bg-secondary rounded-full border border-dark"></div>
                   </div>
                   <div class="ml-3 hidden md:block">
@@ -258,7 +347,7 @@
               </li>
             </ul>
           </div>
-          
+
           <!-- 其他分组 -->
           <div class="mb-2">
             <div class="flex items-center justify-between p-2 text-xs text-gray-400 cursor-pointer hover:bg-dark-light rounded-lg">
@@ -269,7 +358,7 @@
               <span class="hidden md:block">12</span>
             </div>
           </div>
-          
+
           <div class="mb-2">
             <div class="flex items-center justify-between p-2 text-xs text-gray-400 cursor-pointer hover:bg-dark-light rounded-lg">
               <div class="flex items-center">
@@ -279,7 +368,7 @@
               <span class="hidden md:block">8</span>
             </div>
           </div>
-          
+
           <div class="mb-2">
             <div class="flex items-center justify-between p-2 text-xs text-gray-400 cursor-pointer hover:bg-dark-light rounded-lg">
               <div class="flex items-center">
@@ -291,13 +380,17 @@
           </div>
         </div>
       </div>
-      
+
       <!-- 底部 -->
       <div class="p-3 border-t border-gray-700">
         <div class="flex items-center">
-          <img src="PNG/xny.jpg" alt="个人头像" class="w-10 h-10 rounded-full object-cover">
+          <img
+            src="PNG/xny.jpg"
+            alt="个人头像"
+            class="w-10 h-10 rounded-full object-cover"
+          >
           <div class="ml-3 hidden md:block">
-            <h4 class="text-sm font-medium">网络小白_Uncle城</h4>
+            <h4 class="text-sm font-medium">Hans码数理哲</h4>
             <p class="text-xs text-gray-400">在线</p>
           </div>
           <div class="ml-auto flex space-x-2">
@@ -311,14 +404,18 @@
         </div>
       </div>
     </div>
-    
+
     <!-- 右侧聊天区域 -->
     <div class="flex-1 flex flex-col border-l border-gray-200">
       <!-- 聊天头部 -->
       <div class="h-16 border-b border-gray-200 flex items-center justify-between px-4 bg-white">
         <div class="flex items-center">
           <div class="relative">
-            <img src="PNG/gsd.jpg" alt="高松灯" class="w-10 h-10 rounded-full object-cover">
+            <img
+              src="PNG/gsd.jpg"
+              alt="高松灯"
+              class="w-10 h-10 rounded-full object-cover"
+            >
             <div class="absolute bottom-0 right-0 w-2 h-2 bg-secondary rounded-full border border-white"></div>
           </div>
           <div class="ml-3">
@@ -326,7 +423,7 @@
             <p class="text-xs text-gray-500">正在输入...</p>
           </div>
         </div>
-        
+
         <div class="flex space-x-2">
           <button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-all-200">
             <i class="fa fa-search text-gray-500"></i>
@@ -345,17 +442,21 @@
           </button>
         </div>
       </div>
-      
+
       <!-- 聊天内容区域 -->
       <div class="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar bg-chat-bg">
         <!-- 时间分割线 -->
         <div class="flex justify-center">
           <span class="text-xs bg-gray-200 text-gray-500 px-3 py-1 rounded-full">今天 09:30</span>
         </div>
-        
+
         <!-- 对方消息 -->
         <div class="flex items-start">
-          <img src="PNG/gsd.jpg" alt="高松灯" class="w-8 h-8 rounded-full object-cover">
+          <img
+            src="PNG/gsd.jpg"
+            alt="高松灯"
+            class="w-8 h-8 rounded-full object-cover"
+          >
           <div class="ml-2 max-w-[75%]">
             <div class="flex items-center">
               <span class="text-xs text-gray-500 mr-2">高松灯</span>
@@ -366,10 +467,14 @@
             </div>
           </div>
         </div>
-        
+
         <!-- 对方消息 -->
         <div class="flex items-start">
-          <img src="PNG/gsd.jpg" alt="高松灯" class="w-8 h-8 rounded-full object-cover">
+          <img
+            src="PNG/gsd.jpg"
+            alt="高松灯"
+            class="w-8 h-8 rounded-full object-cover"
+          >
           <div class="ml-2 max-w-[75%]">
             <div class="flex items-center">
               <span class="text-xs text-gray-500 mr-2">高松灯</span>
@@ -380,7 +485,7 @@
             </div>
           </div>
         </div>
-        
+
         <!-- 自己消息 -->
         <div class="flex items-start justify-end">
           <div class="mr-2 max-w-[75%]">
@@ -395,22 +500,39 @@
               <i class="fa fa-check-circle text-secondary text-xs"></i>
             </div>
           </div>
-          <img src="PNG/xny.jpg" alt="自己" class="w-8 h-8 rounded-full object-cover">
+          <img
+            src="PNG/xny.jpg"
+            alt="自己"
+            class="w-8 h-8 rounded-full object-cover"
+          >
         </div>
-        
+
         <!-- 正在输入提示 -->
         <div class="flex items-start">
-          <img src="PNG/gsd.jpg" alt="高松灯" class="w-8 h-8 rounded-full object-cover">
+          <img
+            src="PNG/gsd.jpg"
+            alt="高松灯"
+            class="w-8 h-8 rounded-full object-cover"
+          >
           <div class="ml-2">
             <div class="bg-white rounded-lg rounded-tl-none p-3 shadow-sm inline-flex space-x-1">
-              <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0ms;"></div>
-              <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 150ms;"></div>
-              <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 300ms;"></div>
+              <div
+                class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                style="animation-delay: 0ms;"
+              ></div>
+              <div
+                class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                style="animation-delay: 150ms;"
+              ></div>
+              <div
+                class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                style="animation-delay: 300ms;"
+              ></div>
             </div>
           </div>
         </div>
       </div>
-      
+
       <!-- 输入区域 -->
       <div class="h-20 border-t border-gray-200 bg-white flex items-center px-4">
         <div class="flex space-x-2 mr-2">
@@ -424,14 +546,18 @@
             <i class="fa fa-picture-o text-gray-500"></i>
           </button>
         </div>
-        
+
         <div class="flex-1 relative">
-          <input type="text" placeholder="输入消息..." class="w-full h-12 px-4 pr-12 rounded-full border border-gray-200 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary">
+          <input
+            type="text"
+            placeholder="输入消息..."
+            class="w-full h-12 px-4 pr-12 rounded-full border border-gray-200 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+          >
           <button class="absolute right-3 top-1/2 transform -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-all-200">
             <i class="fa fa-microphone text-gray-500"></i>
           </button>
         </div>
-        
+
         <button class="w-10 h-10 ml-2 flex items-center justify-center rounded-full bg-primary text-white hover:bg-primary/90 transition-all-200">
           <i class="fa fa-paper-plane"></i>
         </button>
@@ -441,38 +567,38 @@
 
   <!-- JavaScript -->
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       // 好友点击事件
       const friendItems = document.querySelectorAll('.friend-item');
       friendItems.forEach(item => {
-        item.addEventListener('click', function(e) {
+        item.addEventListener('click', function (e) {
           e.preventDefault();
-          
+
           // 移除其他好友的选中状态
           friendItems.forEach(i => i.classList.remove('bg-primary/10'));
-          
+
           // 添加当前好友的选中状态
           this.classList.add('bg-primary/10');
-          
+
           // 获取好友信息
           const friendId = this.getAttribute('data-id');
           const friendName = this.querySelector('h4').textContent;
           const friendAvatar = this.querySelector('img').src;
-          
+
           // 更新聊天区域信息
           updateChatArea(friendId, friendName, friendAvatar);
         });
       });
-      
+
       // 更新聊天区域信息
       function updateChatArea(id, name, avatar) {
         const chatHeader = document.querySelector('.flex-1 .h-16');
         const chatContent = document.querySelector('.flex-1 .overflow-y-auto');
-        
+
         // 更新头部信息
         chatHeader.querySelector('img').src = avatar;
         chatHeader.querySelector('h3').textContent = name;
-        
+
         // 这里可以根据好友ID加载对应的聊天记录
         // 简化版：清空现有内容并添加欢迎消息
         chatContent.innerHTML = `
@@ -485,22 +611,22 @@
             </div>
           </div>
         `;
-        
+
         // 滚动到底部
         chatContent.scrollTop = chatContent.scrollHeight;
       }
-      
+
       // 输入框发送消息
       const messageInput = document.querySelector('input[type="text"]');
       const sendButton = document.querySelector('.fa-paper-plane').parentElement;
-      
+
       function sendMessage() {
         const message = messageInput.value.trim();
         if (message) {
           const chatContent = document.querySelector('.flex-1 .overflow-y-auto');
           const now = new Date();
           const timeString = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
-          
+
           // 添加新消息
           const newMessageHTML = `
             <div class="flex items-start justify-end">
@@ -519,22 +645,22 @@
               <img src="PNG/xny.jpg" alt="自己" class="w-8 h-8 rounded-full object-cover">
             </div>
           `;
-          
+
           chatContent.insertAdjacentHTML('beforeend', newMessageHTML);
-          
+
           // 清空输入框
           messageInput.value = '';
-          
+
           // 滚动到底部
           chatContent.scrollTop = chatContent.scrollHeight;
         }
       }
-      
+
       // 点击发送按钮
       sendButton.addEventListener('click', sendMessage);
-      
+
       // 按Enter发送
-      messageInput.addEventListener('keypress', function(e) {
+      messageInput.addEventListener('keypress', function (e) {
         if (e.key === 'Enter') {
           sendMessage();
         }
@@ -542,4 +668,5 @@
     });
   </script>
 </body>
+
 </html>

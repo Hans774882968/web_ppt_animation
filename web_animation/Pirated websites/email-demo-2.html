@@ -1,10 +1,17 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
     <title>邮件演示 - 发送RAR文件</title>
-    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link
+        href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"
+        rel="stylesheet"
+    >
     <style>
         /* 基础样式重置 */
         * {
@@ -12,7 +19,7 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
             background-color: #f9fafb;
@@ -21,7 +28,7 @@
             display: flex;
             flex-direction: column;
         }
-        
+
         /* 顶部导航栏 */
         header {
             background-color: white;
@@ -32,11 +39,11 @@
             z-index: 50;
             transition: all 0.3s ease;
         }
-        
+
         header:hover {
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
-        
+
         .header-container {
             max-width: 1280px;
             margin: 0 auto;
@@ -45,13 +52,13 @@
             align-items: center;
             justify-content: space-between;
         }
-        
+
         .header-left {
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
-        
+
         .logo {
             width: 2.5rem;
             height: 2.5rem;
@@ -62,7 +69,7 @@
             justify-content: center;
             color: white;
         }
-        
+
         .logo-text {
             font-size: 1.25rem;
             font-weight: 700;
@@ -70,28 +77,28 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        
+
         .header-right {
             display: flex;
             align-items: center;
             gap: 1.5rem;
         }
-        
+
         .header-icon {
             color: #64748b;
             transition: color 0.3s ease;
         }
-        
+
         .header-icon:hover {
             color: #ff69b4;
         }
-        
+
         .user-info {
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
-        
+
         .user-avatar {
             width: 2rem;
             height: 2rem;
@@ -99,24 +106,24 @@
             background-color: #e2e8f0;
             overflow: hidden;
         }
-        
+
         .user-avatar img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-        
+
         .user-name {
             font-weight: 500;
             display: none;
         }
-        
+
         @media (min-width: 768px) {
             .user-name {
                 display: inline;
             }
         }
-        
+
         /* 主要内容区 */
         .main-container {
             flex: 1;
@@ -126,19 +133,19 @@
             padding: 1.5rem 1rem;
             gap: 1.5rem;
         }
-        
+
         /* 侧边栏 */
         aside {
             width: 4rem;
             flex-shrink: 0;
         }
-        
+
         @media (min-width: 768px) {
             aside {
                 width: 16rem;
             }
         }
-        
+
         .sidebar {
             background-color: white;
             border-radius: 0.75rem;
@@ -146,7 +153,7 @@
             padding: 1rem;
             height: 100%;
         }
-        
+
         .compose-btn {
             width: 100%;
             padding: 0.75rem 1rem;
@@ -163,15 +170,15 @@
             transition: all 0.3s ease;
             margin-bottom: 0.5rem;
         }
-        
+
         .compose-btn:hover {
             background-color: rgba(255, 105, 180, 0.2);
         }
-        
+
         .sidebar-menu {
             margin-top: 1rem;
         }
-        
+
         .menu-item {
             width: 100%;
             padding: 0.5rem 1rem;
@@ -187,17 +194,17 @@
             transition: all 0.3s ease;
             margin-bottom: 0.25rem;
         }
-        
+
         .menu-item:hover {
             background-color: #f1f5f9;
         }
-        
+
         .menu-item.active {
             background-color: rgba(255, 105, 180, 0.1);
             color: #ff69b4;
             font-weight: 500;
         }
-        
+
         .menu-badge {
             margin-left: auto;
             background-color: #e63946;
@@ -208,42 +215,43 @@
             min-width: 1.5rem;
             text-align: center;
         }
-        
+
         .menu-divider {
             height: 1px;
             background-color: #f1f5f9;
             margin: 0.75rem 0;
         }
-        
+
         @media (min-width: 768px) {
+
             .compose-btn,
             .menu-item {
                 justify-content: flex-start;
             }
         }
-        
+
         .menu-text {
             display: none;
         }
-        
+
         @media (min-width: 768px) {
             .menu-text {
                 display: inline;
             }
         }
-        
+
         /* 存储信息 */
         .storage-info {
             margin-top: 2rem;
             display: none;
         }
-        
+
         @media (min-width: 768px) {
             .storage-info {
                 display: block;
             }
         }
-        
+
         .storage-card {
             height: 10rem;
             width: 100%;
@@ -253,7 +261,7 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .storage-card::before {
             content: '';
             position: absolute;
@@ -265,7 +273,7 @@
             border-radius: 9999px;
             transform: translate(50%, -50%);
         }
-        
+
         .storage-card::after {
             content: '';
             position: absolute;
@@ -277,7 +285,7 @@
             border-radius: 9999px;
             transform: translate(-50%, 50%);
         }
-        
+
         .storage-title {
             font-size: 0.875rem;
             font-weight: 600;
@@ -285,7 +293,7 @@
             position: relative;
             z-index: 1;
         }
-        
+
         .storage-bar {
             width: 100%;
             height: 0.5rem;
@@ -295,14 +303,14 @@
             position: relative;
             z-index: 1;
         }
-        
+
         .storage-progress {
             height: 100%;
             width: 60%;
             background: linear-gradient(90deg, #ff69b4, #c084fc);
             border-radius: 9999px;
         }
-        
+
         .storage-text {
             font-size: 0.75rem;
             color: #64748b;
@@ -310,14 +318,14 @@
             position: relative;
             z-index: 1;
         }
-        
+
         /* 邮件内容区 */
         section {
             flex: 1;
             max-width: 800px;
             min-width: 800px;
         }
-        
+
         .email-list {
             background-color: white;
             border-radius: 0.75rem;
@@ -325,25 +333,25 @@
             padding: 1.5rem;
             margin-bottom: 1.5rem;
         }
-        
+
         .email-list-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 1.5rem;
         }
-        
+
         .email-list-title {
             font-size: 1.25rem;
             font-weight: 700;
         }
-        
+
         .email-list-actions {
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
-        
+
         .action-btn {
             padding: 0.5rem;
             border-radius: 0.5rem;
@@ -353,11 +361,11 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-        
+
         .action-btn:hover {
             background-color: #f1f5f9;
         }
-        
+
         /* 搜索框 */
         .search-box {
             display: flex;
@@ -369,13 +377,13 @@
             margin-right: 1rem;
             transition: all 0.3s ease;
         }
-        
+
         .search-box:focus-within {
             border-color: #ff69b4;
             background-color: white;
             box-shadow: 0 0 0 3px rgba(255, 105, 180, 0.1);
         }
-        
+
         .search-input {
             border: none;
             background: transparent;
@@ -384,11 +392,11 @@
             flex: 1;
             outline: none;
         }
-        
+
         .search-input::placeholder {
             color: #94a3b8;
         }
-        
+
         .search-btn {
             border: none;
             background: transparent;
@@ -397,18 +405,18 @@
             cursor: pointer;
             transition: color 0.3s ease;
         }
-        
+
         .search-btn:hover {
             color: #ff69b4;
         }
-        
+
         /* 邮件项 */
         .email-items {
             display: flex;
             flex-direction: column;
             gap: 0.75rem;
         }
-        
+
         .email-item {
             padding: 1rem;
             border-radius: 0.5rem;
@@ -421,7 +429,7 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .email-item::before {
             content: '';
             position: absolute;
@@ -432,37 +440,40 @@
             background: linear-gradient(90deg, transparent, rgba(255, 105, 180, 0.05), transparent);
             transition: left 0.6s;
         }
-        
+
         .email-item:hover::before {
             left: 100%;
         }
-        
+
         .email-item:hover {
             background-color: #f9fafb;
             transform: translateY(-1px);
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
         }
-        
+
         .email-item-highlight {
             background-color: #f9fafb;
             border: 1px solid rgba(255, 105, 180, 0.3);
             box-shadow: 0 0 15px rgba(255, 105, 180, 0.4);
             animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
-        
+
         .email-item-highlight::before {
             background: linear-gradient(90deg, transparent, rgba(255, 105, 180, 0.1), transparent);
         }
-        
+
         @keyframes pulse {
-            0%, 100% {
+
+            0%,
+            100% {
                 opacity: 1;
             }
+
             50% {
                 opacity: 0.9;
             }
         }
-        
+
         .email-avatar {
             width: 2.5rem;
             height: 2.5rem;
@@ -472,33 +483,33 @@
             justify-content: center;
             overflow: hidden;
         }
-        
+
         .email-avatar[style*="background-image"] {
             display: block;
         }
-        
+
         .email-avatar-default {
             background-color: #f1f5f9;
             color: #64748b;
         }
-        
+
         .email-avatar-highlight {
             background-color: rgba(255, 105, 180, 0.1);
             color: #ff69b4;
         }
-        
+
         .email-content {
             flex: 1;
             min-width: 0;
         }
-        
+
         .email-sender {
             font-weight: 500;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        
+
         .email-subject {
             font-size: 0.875rem;
             color: #64748b;
@@ -506,13 +517,13 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        
+
         .email-time {
             text-align: right;
             font-size: 0.875rem;
             color: #64748b;
         }
-        
+
         /* 邮件详情 */
         .email-detail {
             background-color: white;
@@ -521,125 +532,126 @@
             padding: 1.5rem;
             transition: all 0.3s ease;
         }
-        
+
         .email-detail:hover {
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
-        
+
         .email-detail-content {
             animation: fadeIn 0.5s ease;
         }
-        
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
                 transform: translateY(10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
-        
+
         .email-detail-content {
             width: 100%;
         }
-        
+
         .email-detail-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 1.5rem;
         }
-        
+
         .email-detail-title {
             font-size: 1.25rem;
             font-weight: 700;
         }
-        
+
         .email-detail-actions {
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
-        
+
         /* 邮件头部信息 */
         .email-header-info {
             border-bottom: 1px solid #f1f5f9;
             padding-bottom: 1.5rem;
             margin-bottom: 1.5rem;
         }
-        
+
         .email-header-main {
             display: flex;
             flex-direction: column;
             gap: 1rem;
             margin-bottom: 1rem;
         }
-        
+
         @media (min-width: 768px) {
             .email-header-main {
                 flex-direction: row;
                 align-items: center;
             }
         }
-        
+
         .email-header-from {
             display: flex;
             align-items: center;
             gap: 0.75rem;
         }
-        
+
         .email-header-avatar {
             width: 3rem;
             height: 3rem;
             border-radius: 9999px;
             overflow: hidden;
         }
-        
+
         .email-header-avatar img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-        
+
         .email-header-contact {
             display: flex;
             flex-direction: column;
         }
-        
+
         .email-header-sender {
             font-weight: 600;
         }
-        
+
         .email-header-email {
             font-size: 0.875rem;
             color: #64748b;
         }
-        
+
         .email-header-time {
             margin-left: auto;
             font-size: 0.875rem;
             color: #64748b;
         }
-        
+
         .email-subject-detail {
             font-size: 1.25rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
         }
-        
+
         /* 邮件内容 */
         .email-body {
             margin-bottom: 2rem;
         }
-        
+
         .email-body-content {
             color: #475569;
             line-height: 1.6;
             margin-bottom: 1rem;
         }
-        
+
         /* 附件 */
         .email-attachment {
             display: flex;
@@ -652,11 +664,11 @@
             width: fit-content;
             transition: all 0.3s ease;
         }
-        
+
         .email-attachment:hover {
             border-color: rgba(255, 105, 180, 0.5);
         }
-        
+
         .attachment-icon {
             width: 3rem;
             height: 3rem;
@@ -668,30 +680,33 @@
             color: #ff69b4;
             animation: float 6s ease-in-out infinite;
         }
-        
+
         @keyframes float {
-            0%, 100% {
+
+            0%,
+            100% {
                 transform: translateY(0);
             }
+
             50% {
                 transform: translateY(-0.25rem);
             }
         }
-        
+
         .attachment-info {
             display: flex;
             flex-direction: column;
         }
-        
+
         .attachment-name {
             font-weight: 500;
         }
-        
+
         .attachment-size {
             font-size: 0.875rem;
             color: #64748b;
         }
-        
+
         .attachment-download {
             margin-left: 1rem;
             padding: 0.5rem;
@@ -703,20 +718,20 @@
             transition: all 0.3s ease;
             opacity: 0;
         }
-        
+
         .email-attachment:hover .attachment-download {
             opacity: 1;
         }
-        
+
         .attachment-download:hover {
             background-color: rgba(255, 105, 180, 0.2);
             transform: scale(1.1);
         }
-        
+
         .scale-110 {
             transform: scale(1.1);
         }
-        
+
         /* 发送状态 */
         .email-status {
             display: flex;
@@ -729,7 +744,7 @@
             border-radius: 0.5rem;
             width: fit-content;
         }
-        
+
         /* 页面加载动画 */
         .page-loader {
             position: fixed;
@@ -744,25 +759,25 @@
             z-index: 9999;
             transition: all 0.5s ease;
         }
-        
+
         .page-loader.hidden {
             opacity: 0;
             visibility: hidden;
         }
-        
+
         .loader-content {
             text-align: center;
             width: 100%;
             max-width: 300px;
         }
-        
+
         .loader-logo {
             display: flex;
             flex-direction: column;
             align-items: center;
             margin-bottom: 2rem;
         }
-        
+
         .loader-logo-circle {
             width: 6rem;
             height: 6rem;
@@ -772,12 +787,17 @@
             animation: spin 1s linear infinite;
             margin-bottom: 1rem;
         }
-        
+
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
-        
+
         .loader-logo-text {
             font-size: 1.5rem;
             font-weight: 700;
@@ -785,7 +805,7 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        
+
         .loader-progress {
             width: 100%;
             height: 0.5rem;
@@ -794,7 +814,7 @@
             overflow: hidden;
             margin-bottom: 1rem;
         }
-        
+
         .loader-progress-bar {
             height: 100%;
             width: 0%;
@@ -802,12 +822,12 @@
             border-radius: 9999px;
             transition: width 0.3s ease;
         }
-        
+
         .loader-text {
             font-size: 1rem;
             color: #64748b;
         }
-        
+
         /* 病毒警告弹窗 */
         .virus-modal {
             position: fixed;
@@ -822,16 +842,17 @@
             z-index: 9999;
             animation: fadeIn 0.3s ease;
         }
-        
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
             }
+
             to {
                 opacity: 1;
             }
         }
-        
+
         .virus-modal-content {
             background-color: white;
             border-radius: 0.75rem;
@@ -842,56 +863,57 @@
             border-top: 4px solid #e63946;
             animation: slideUp 0.3s ease;
         }
-        
+
         @keyframes slideUp {
             from {
                 opacity: 0;
                 transform: translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
-        
+
         .virus-modal-header {
             display: flex;
             align-items: center;
             gap: 1rem;
             margin-bottom: 1.5rem;
         }
-        
+
         .virus-icon {
             font-size: 2rem;
             color: #e63946;
         }
-        
+
         .virus-modal-title {
             font-size: 1.5rem;
             font-weight: 700;
             color: #e63946;
         }
-        
+
         .virus-modal-body {
             margin-bottom: 1.5rem;
             line-height: 1.6;
         }
-        
+
         .virus-modal-body ul {
             margin-top: 1rem;
             margin-left: 1.5rem;
         }
-        
+
         .virus-modal-body li {
             margin-bottom: 0.5rem;
         }
-        
+
         .virus-modal-footer {
             display: flex;
             gap: 1rem;
             justify-content: flex-end;
         }
-        
+
         .virus-modal-btn {
             padding: 0.75rem 1.5rem;
             border-radius: 0.5rem;
@@ -899,52 +921,52 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-        
+
         .virus-modal-btn-primary {
             background-color: #e63946;
             color: white;
             border: none;
         }
-        
+
         .virus-modal-btn-primary:hover {
             background-color: #c1121f;
         }
-        
+
         .virus-modal-btn-secondary {
             background-color: #f1f5f9;
             color: #334155;
             border: 1px solid #e2e8f0;
         }
-        
+
         .virus-modal-btn-secondary:hover {
             background-color: #e2e8f0;
         }
-        
+
         /* 右侧装饰元素 */
         .decorative-elements {
             display: none;
             width: 6rem;
             flex-shrink: 0;
         }
-        
+
         @media (min-width: 1024px) {
             .decorative-elements {
                 display: block;
             }
         }
-        
+
         .decorative-container {
             height: 100%;
             position: sticky;
             top: 6rem;
         }
-        
+
         .decorative-circle {
             position: absolute;
             border-radius: 9999px;
             animation: float 6s ease-in-out infinite;
         }
-        
+
         .decorative-circle-1 {
             width: 4rem;
             height: 4rem;
@@ -952,7 +974,7 @@
             top: 5rem;
             right: 0;
         }
-        
+
         .decorative-circle-2 {
             width: 2.5rem;
             height: 2.5rem;
@@ -961,7 +983,7 @@
             right: 1rem;
             animation-delay: 1s;
         }
-        
+
         .decorative-circle-3 {
             width: 1.5rem;
             height: 1.5rem;
@@ -970,7 +992,7 @@
             right: 2rem;
             animation-delay: 2s;
         }
-        
+
         /* 页脚 */
         footer {
             background-color: white;
@@ -978,34 +1000,41 @@
             padding: 1rem;
             margin-top: 1.5rem;
         }
-        
+
         .footer-container {
             max-width: 1280px;
             margin: 0 auto;
             text-align: center;
         }
-        
+
         .footer-text {
             font-size: 0.875rem;
             color: #64748b;
         }
     </style>
 </head>
+
 <body>
     <!-- 页面加载动画 -->
-    <div class="page-loader" id="pageLoader">
+    <div
+        class="page-loader"
+        id="pageLoader"
+    >
         <div class="loader-content">
             <div class="loader-logo">
                 <div class="loader-logo-circle"></div>
                 <div class="loader-logo-text">MailDemo</div>
             </div>
             <div class="loader-progress">
-                <div class="loader-progress-bar" id="loaderProgressBar"></div>
+                <div
+                    class="loader-progress-bar"
+                    id="loaderProgressBar"
+                ></div>
             </div>
             <div class="loader-text">正在加载邮箱...</div>
         </div>
     </div>
-    
+
     <!-- 顶部导航栏 -->
     <header>
         <div class="header-container">
@@ -1015,7 +1044,7 @@
                 </div>
                 <h1 class="logo-text">BaiMail</h1>
             </div>
-            
+
             <div class="header-right">
                 <button class="header-icon">
                     <i class="fa fa-bell-o text-xl"></i>
@@ -1025,7 +1054,10 @@
                 </button>
                 <div class="user-info">
                     <div class="user-avatar">
-                        <img src="PNG/xb.png" alt="用户头像">
+                        <img
+                            src="PNG/xb.jpg"
+                            alt="用户头像"
+                        >
                     </div>
                     <span class="user-name">大叔城</span>
                 </div>
@@ -1042,7 +1074,7 @@
                     <i class="fa fa-paper-plane-o"></i>
                     <span class="menu-text">发送邮件</span>
                 </button>
-                
+
                 <div class="sidebar-menu">
                     <button class="menu-item active">
                         <i class="fa fa-inbox"></i>
@@ -1075,7 +1107,7 @@
                         <span class="menu-text">帮助</span>
                     </button>
                 </div>
-                
+
                 <!-- 装饰图形元素 -->
                 <div class="storage-info">
                     <div class="storage-card">
@@ -1096,7 +1128,12 @@
                     <h2 class="email-list-title">收件箱</h2>
                     <div class="email-list-actions">
                         <div class="search-box">
-                            <input type="text" placeholder="搜索邮件..." id="email-search" class="search-input">
+                            <input
+                                type="text"
+                                placeholder="搜索邮件..."
+                                id="email-search"
+                                class="search-input"
+                            >
                             <button class="search-btn">
                                 <i class="fa fa-search"></i>
                             </button>
@@ -1109,11 +1146,14 @@
                         </button>
                     </div>
                 </div>
-                
+
                 <!-- 邮件列表 -->
                 <div class="email-items">
                     <!-- 初始为空，通过JavaScript动态添加邮件 -->
-                    <div class="empty-state" id="emptyState">
+                    <div
+                        class="empty-state"
+                        id="emptyState"
+                    >
                         <div style="text-align: center; padding: 4rem 2rem; color: #64748b;">
                             <i class="fa fa-envelope-o text-4xl mb-4"></i>
                             <p>暂无邮件</p>
@@ -1122,11 +1162,14 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- 邮件详情 -->
             <div class="email-detail">
                 <!-- 邮件详情内容 - 李四 -->
-                <div id="email-1-detail" class="email-detail-content">
+                <div
+                    id="email-1-detail"
+                    class="email-detail-content"
+                >
                     <div class="email-detail-header">
                         <h2 class="email-detail-title">邮件详情</h2>
                         <div class="email-detail-actions">
@@ -1141,12 +1184,15 @@
                             </button>
                         </div>
                     </div>
-                    
+
                     <div class="email-header-info">
                         <div class="email-header-main">
                             <div class="email-header-from">
                                 <div class="email-header-avatar">
-                                    <img src="PNG/sensei.jpg" alt="老师的头像">
+                                    <img
+                                        src="PNG/sensei.jpg"
+                                        alt="老师的头像"
+                                    >
                                 </div>
                                 <div class="email-header-contact">
                                     <h3 class="email-header-sender">老师 <span class="email-header-email">sensei@example.com</span></h3>
@@ -1157,10 +1203,10 @@
                                 发送时间: 昨天 10:15
                             </div>
                         </div>
-                        
+
                         <h3 class="email-subject-detail">关于上周会议的纪要...</h3>
                     </div>
-                    
+
                     <div class="email-body">
                         <p class="email-body-content">
                             您好，<br><br>
@@ -1169,7 +1215,7 @@
                             此致，<br>
                             老师
                         </p>
-                        
+
                         <!-- 附件展示 -->
                         <div class="email-attachment">
                             <div class="attachment-icon">
@@ -1184,16 +1230,20 @@
                             </button>
                         </div>
                     </div>
-                    
+
                     <!-- 发送状态指示 -->
                     <div class="email-status">
                         <i class="fa fa-check-circle"></i>
                         <span>邮件已成功发送，包含1个附件</span>
                     </div>
                 </div>
-                
+
                 <!-- 邮件详情内容 - 浅草爱音 -->
-                <div id="email-2-detail" class="email-detail-content" style="display: none;">
+                <div
+                    id="email-2-detail"
+                    class="email-detail-content"
+                    style="display: none;"
+                >
                     <div class="email-detail-header">
                         <h2 class="email-detail-title">邮件详情</h2>
                         <div class="email-detail-actions">
@@ -1208,12 +1258,15 @@
                             </button>
                         </div>
                     </div>
-                    
+
                     <div class="email-header-info">
                         <div class="email-header-main">
                             <div class="email-header-from">
                                 <div class="email-header-avatar">
-                                    <img src="PNG/allin.jpg" alt="浅草爱音的头像">
+                                    <img
+                                        src="PNG/allin.jpg"
+                                        alt="浅草爱音的头像"
+                                    >
                                 </div>
                                 <div class="email-header-contact">
                                     <h3 class="email-header-sender">浅草爱音 <span class="email-header-email">allin@example.com</span></h3>
@@ -1224,10 +1277,10 @@
                                 发送时间: 今天 14:30
                             </div>
                         </div>
-                        
+
                         <h3 class="email-subject-detail">项目资料压缩包，请查收</h3>
                     </div>
-                    
+
                     <div class="email-body">
                         <p class="email-body-content">
                             您好，<br><br>
@@ -1235,7 +1288,7 @@
                             请查收并告知是否有问题。<br><br>
                             谢谢！
                         </p>
-                        
+
                         <!-- RAR附件展示 -->
                         <div class="email-attachment">
                             <div class="attachment-icon">
@@ -1245,21 +1298,28 @@
                                 <h4 class="attachment-name">project_files.rar</h4>
                                 <p class="attachment-size">2.4 MB</p>
                             </div>
-                            <button class="attachment-download" onclick="downloadMaliciousFile()">
+                            <button
+                                class="attachment-download"
+                                onclick="downloadMaliciousFile()"
+                            >
                                 <i class="fa fa-download"></i>
                             </button>
                         </div>
                     </div>
-                    
+
                     <!-- 发送状态指示 -->
                     <div class="email-status">
                         <i class="fa fa-check-circle"></i>
                         <span>邮件已成功发送，包含1个附件</span>
                     </div>
                 </div>
-                
+
                 <!-- 邮件详情内容 - 人力资源部 -->
-                <div id="email-3-detail" class="email-detail-content" style="display: none;">
+                <div
+                    id="email-3-detail"
+                    class="email-detail-content"
+                    style="display: none;"
+                >
                     <div class="email-detail-header">
                         <h2 class="email-detail-title">邮件详情</h2>
                         <div class="email-detail-actions">
@@ -1274,12 +1334,15 @@
                             </button>
                         </div>
                     </div>
-                    
+
                     <div class="email-header-info">
                         <div class="email-header-main">
                             <div class="email-header-from">
                                 <div class="email-header-avatar">
-                                    <img src="PNG/xz.png" alt="人力资源部的头像">
+                                    <img
+                                        src="PNG/xz.png"
+                                        alt="人力资源部的头像"
+                                    >
                                 </div>
                                 <div class="email-header-contact">
                                     <h3 class="email-header-sender">人力资源部 <span class="email-header-email">hr@example.com</span></h3>
@@ -1290,10 +1353,10 @@
                                 发送时间: 3天前 09:30
                             </div>
                         </div>
-                        
+
                         <h3 class="email-subject-detail">关于新员工入职培训的通知</h3>
                     </div>
-                    
+
                     <div class="email-body">
                         <p class="email-body-content">
                             您好，<br><br>
@@ -1301,7 +1364,7 @@
                             培训将于下周一上午9点开始，请准时参加。<br><br>
                             人力资源部
                         </p>
-                        
+
                         <!-- 附件展示 -->
                         <div class="email-attachment">
                             <div class="attachment-icon">
@@ -1316,7 +1379,7 @@
                             </button>
                         </div>
                     </div>
-                    
+
                     <!-- 发送状态指示 -->
                     <div class="email-status">
                         <i class="fa fa-check-circle"></i>
@@ -1325,7 +1388,7 @@
                 </div>
             </div>
         </section>
-        
+
         <!-- 右侧装饰元素 -->
         <div class="decorative-elements">
             <div class="decorative-container">
@@ -1380,14 +1443,14 @@
                 avatarImage: 'PNG/allin.jpg'
             }
         ];
-        
+
         // 初始化邮件加载
         function initEmailLoading() {
             // 隐藏所有邮件详情
             document.querySelectorAll('.email-detail-content').forEach(content => {
                 content.style.display = 'none';
             });
-            
+
             // 逐个加载邮件
             emails.forEach(email => {
                 setTimeout(() => {
@@ -1395,7 +1458,7 @@
                 }, email.delay);
             });
         }
-        
+
         // 添加邮件到列表
         function addEmail(email) {
             // 移除空状态
@@ -1403,12 +1466,12 @@
             if (emptyState) {
                 emptyState.remove();
             }
-            
+
             // 创建邮件元素
             const emailElement = document.createElement('div');
             emailElement.className = `email-item ${email.highlight ? 'email-item-highlight' : ''}`;
             emailElement.dataset.emailId = email.id;
-            
+
             // 构建头像部分
             let avatarHTML = '';
             if (email.avatarImage) {
@@ -1416,7 +1479,7 @@
             } else {
                 avatarHTML = `<div class="email-avatar ${email.avatarClass}">${email.avatar}</div>`;
             }
-            
+
             emailElement.innerHTML = `
                 ${avatarHTML}
                 <div class="email-content">
@@ -1427,36 +1490,36 @@
                     <p>${email.time}</p>
                 </div>
             `;
-            
+
             // 添加到邮件列表
             const emailItems = document.querySelector('.email-items');
             emailItems.appendChild(emailElement);
-            
+
             // 添加动画效果
             emailElement.style.opacity = '0';
             emailElement.style.transform = 'translateY(20px)';
             emailElement.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-            
+
             setTimeout(() => {
                 emailElement.style.opacity = '1';
                 emailElement.style.transform = 'translateY(0)';
             }, 100);
-            
+
             // 添加点击事件
-            emailElement.addEventListener('click', function() {
+            emailElement.addEventListener('click', function () {
                 // 移除其他所有项目的高亮状态
                 document.querySelectorAll('.email-item').forEach(el => {
                     el.classList.remove('email-item-highlight');
                 });
-                
+
                 // 添加当前项目的高亮状态
                 this.classList.add('email-item-highlight');
-                
+
                 // 隐藏所有邮件详情
                 document.querySelectorAll('.email-detail-content').forEach(content => {
                     content.style.display = 'none';
                 });
-                
+
                 // 显示对应的邮件详情
                 const emailId = this.dataset.emailId;
                 const detailContent = document.getElementById(`${emailId}-detail`);
@@ -1465,32 +1528,32 @@
                 }
             });
         }
-        
+
         // 附件悬停效果增强
         function initAttachmentEffects() {
             document.querySelectorAll('.email-attachment').forEach(attachment => {
-                attachment.addEventListener('mouseenter', function() {
+                attachment.addEventListener('mouseenter', function () {
                     this.querySelector('.attachment-download').classList.add('scale-110');
                 });
-                
-                attachment.addEventListener('mouseleave', function() {
+
+                attachment.addEventListener('mouseleave', function () {
                     this.querySelector('.attachment-download').classList.remove('scale-110');
                 });
             });
         }
-        
+
         // 模拟下载恶意文件
         function downloadMaliciousFile() {
             // 模拟下载过程
             showDownloadAlert();
-            
+
             // 模拟下载完成
             setTimeout(() => {
                 // 显示病毒警告弹窗
                 showVirusModal();
             }, 4500);
         }
-        
+
         // 显示下载提示
         function showDownloadAlert() {
             const alert = document.createElement('div');
@@ -1519,25 +1582,25 @@
                 </div>
             `;
             document.body.appendChild(alert);
-            
+
             // 模拟下载进度
             simulateDownloadProgress();
         }
-        
+
         // 模拟下载进度
         function simulateDownloadProgress() {
             let progress = 0;
             const progressBar = document.getElementById('download-progress');
             const percentageText = document.getElementById('download-percentage');
-            
+
             if (!progressBar || !percentageText) return;
-            
+
             const interval = setInterval(() => {
                 progress += Math.floor(Math.random() * 10) + 1;
                 if (progress > 100) {
                     progress = 100;
                     clearInterval(interval);
-                    
+
                     // 下载完成后移除弹窗
                     setTimeout(() => {
                         const modal = document.querySelector('.virus-modal');
@@ -1546,12 +1609,12 @@
                         }
                     }, 500);
                 }
-                
+
                 progressBar.style.width = `${progress}%`;
                 percentageText.textContent = `${progress}%`;
             }, 200);
         }
-        
+
         // 显示病毒警告弹窗
         function showVirusModal() {
             const modal = document.createElement('div');
@@ -1578,7 +1641,7 @@
             `;
             document.body.appendChild(modal);
         }
-        
+
         // 处理病毒弹窗按钮点击
         function handleVirusModal(runAntivirus) {
             // 移除当前弹窗
@@ -1586,11 +1649,11 @@
             if (modal) {
                 modal.remove();
             }
-            
+
             // 显示处理结果
             const resultModal = document.createElement('div');
             resultModal.className = 'virus-modal';
-            
+
             if (runAntivirus) {
                 resultModal.innerHTML = `
                     <div class="virus-modal-content">
@@ -1623,22 +1686,22 @@
                     </div>
                 `;
             }
-            
+
             document.body.appendChild(resultModal);
         }
-        
+
         // 初始化邮件搜索功能
         function initEmailSearch() {
             const searchInput = document.getElementById('email-search');
             if (searchInput) {
-                searchInput.addEventListener('input', function() {
+                searchInput.addEventListener('input', function () {
                     const searchTerm = this.value.toLowerCase();
                     const emailItems = document.querySelectorAll('.email-item');
-                    
+
                     emailItems.forEach(item => {
                         const sender = item.querySelector('.email-sender').textContent.toLowerCase();
                         const subject = item.querySelector('.email-subject').textContent.toLowerCase();
-                        
+
                         if (sender.includes(searchTerm) || subject.includes(searchTerm)) {
                             item.style.display = 'flex';
                         } else {
@@ -1648,19 +1711,19 @@
                 });
             }
         }
-        
+
         // 初始化页面加载动画
         function initPageLoader() {
             const loader = document.getElementById('pageLoader');
             const progressBar = document.getElementById('loaderProgressBar');
             let progress = 0;
-            
+
             const interval = setInterval(() => {
                 progress += Math.floor(Math.random() * 5) + 1;
                 if (progress > 100) {
                     progress = 100;
                     clearInterval(interval);
-                    
+
                     // 加载完成后隐藏加载动画
                     setTimeout(() => {
                         loader.classList.add('hidden');
@@ -1670,15 +1733,16 @@
                         initEmailSearch();
                     }, 500);
                 }
-                
+
                 progressBar.style.width = `${progress}%`;
             }, 100);
         }
-        
+
         // 页面加载完成后初始化
-        window.addEventListener('load', function() {
+        window.addEventListener('load', function () {
             initPageLoader();
         });
     </script>
 </body>
+
 </html>

@@ -1,23 +1,33 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
     <title>微信聊天 - Hermes智能助手</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    >
     <style>
         /* 自定义滚动条 */
         ::-webkit-scrollbar {
             width: 6px;
         }
+
         ::-webkit-scrollbar-track {
             background: #f1f1f1;
         }
+
         ::-webkit-scrollbar-thumb {
             background: #c1c1c1;
             border-radius: 3px;
         }
+
         ::-webkit-scrollbar-thumb:hover {
             background: #a1a1a1;
         }
@@ -28,6 +38,7 @@
                 opacity: 0;
                 transform: translateY(15px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -40,9 +51,12 @@
 
         /* 头像动画 */
         @keyframes avatarBounce {
-            0%, 100% {
+
+            0%,
+            100% {
                 transform: scale(1);
             }
+
             50% {
                 transform: scale(1.05);
             }
@@ -111,10 +125,11 @@
         }
     </style>
 </head>
+
 <body class="bg-gray-200 min-h-screen flex items-center justify-center p-4">
     <!-- 主容器 -->
     <div class="max-w-lg w-full bg-white h-[85vh] flex flex-col shadow-2xl rounded-2xl overflow-hidden">
-        
+
         <!-- 顶部导航栏 -->
         <header class="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between sticky top-0 z-10">
             <div class="flex items-center space-x-3">
@@ -122,7 +137,11 @@
                     <i class="fas fa-chevron-left text-lg"></i>
                 </button>
                 <div class="flex items-center space-x-2">
-                    <img src="PNG/xc.jpg" alt="赤川鹤鸣" class="w-10 h-10 rounded-full object-cover">
+                    <img
+                        src="PNG/xc.jpg"
+                        alt="赤川鹤鸣"
+                        class="w-10 h-10 rounded-full object-cover"
+                    >
                     <div>
                         <h1 class="font-semibold text-gray-800 text-base">赤川鹤鸣_Channel</h1>
                         <p class="text-xs text-gray-500">在线</p>
@@ -143,10 +162,16 @@
         </header>
 
         <!-- 聊天内容区域 -->
-        <main id="chatContainer" class="flex-1 overflow-y-auto px-4 py-4 bg-gray-50">
-            
+        <main
+            id="chatContainer"
+            class="flex-1 overflow-y-auto px-4 py-4 bg-gray-50"
+        >
+
             <!-- 聊天消息将在这里动态生成 -->
-            <div id="messagesContainer" class="space-y-4">
+            <div
+                id="messagesContainer"
+                class="space-y-4"
+            >
                 <!-- 初始加载提示 -->
                 <div class="text-center py-8">
                     <div class="inline-flex items-center space-x-2 text-gray-500 text-sm">
@@ -165,17 +190,20 @@
                     <button class="text-gray-500 hover:text-gray-700 transition-colors">
                         <i class="fas fa-microphone text-xl"></i>
                     </button>
-                    <button id="emojiBtn" class="text-gray-500 hover:text-gray-700 transition-colors">
+                    <button
+                        id="emojiBtn"
+                        class="text-gray-500 hover:text-gray-700 transition-colors"
+                    >
                         <i class="far fa-smile text-xl"></i>
                     </button>
                     <button class="text-gray-500 hover:text-gray-700 transition-colors">
                         <i class="fas fa-folder-open text-xl"></i>
                     </button>
                 </div>
-                
+
                 <!-- 输入框 -->
                 <div class="flex-1">
-                    <textarea 
+                    <textarea
                         id="messageInput"
                         class="w-full px-4 py-2 bg-white border border-gray-300 rounded-2xl resize-none input-focus transition-all duration-200"
                         rows="1"
@@ -183,9 +211,9 @@
                         style="min-height: 36px; max-height: 120px;"
                     ></textarea>
                 </div>
-                
+
                 <!-- 发送按钮 -->
-                <button 
+                <button
                     id="sendBtn"
                     class="send-btn bg-green-500 text-white px-5 py-2 rounded-full font-medium hover:bg-green-600 transition-colors duration-200 flex items-center space-x-2"
                 >
@@ -200,7 +228,7 @@
         // 聊天数据配置
         const chatData = {
             currentUser: {
-                name: '网络小白_Uncle城',
+                name: 'Hans码数理哲',
                 avatar: 'PNG/BA_Hoshino.jpg',
                 bgColor: 'from-blue-500 to-blue-700'
             },
@@ -296,7 +324,7 @@
         // 生成用户头像
         function createAvatar(isCurrentUser) {
             const user = isCurrentUser ? chatData.currentUser : chatData.otherUser;
-            
+
             // 使用图片头像，头像位置由父容器控制
             return `
                 <img src="${user.avatar}" alt="${user.name}" class="w-10 h-10 rounded-full object-cover flex-shrink-0">
@@ -306,16 +334,16 @@
         // 生成消息气泡
         function createMessageElement(message, index) {
             const isCurrentUser = message.sender === 'current';
-            const bubbleClass = isCurrentUser 
-                ? 'bg-green-500 text-gray-800 bubble-right ml-auto' 
+            const bubbleClass = isCurrentUser
+                ? 'bg-green-500 text-gray-800 bubble-right ml-auto'
                 : 'bg-white text-gray-800 bubble-left mr-auto';
-            
+
             // 调整顺序：
             // 网络小白（当前用户）：头像在右(小order)，消息在左(大order)
             // 赤川鹤鸣（其他用户）：头像在左(小order)，消息在右(大order)
             const avatarOrder = isCurrentUser ? 'order-2' : 'order-1';
             const contentOrder = isCurrentUser ? 'order-1' : 'order-2';
-            
+
             // 不使用 flex-row-reverse，直接按 order 顺序显示
             return `
                 <div class="flex items-end space-x-2">
@@ -389,8 +417,8 @@
             if (!content) return;
 
             const now = new Date();
-            const time = now.getHours().toString().padStart(2, '0') + ':' + 
-                        now.getMinutes().toString().padStart(2, '0');
+            const time = now.getHours().toString().padStart(2, '0') + ':' +
+                now.getMinutes().toString().padStart(2, '0');
 
             const message = {
                 sender: 'current',
@@ -435,4 +463,5 @@
         });
     </script>
 </body>
+
 </html>
